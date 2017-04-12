@@ -32,21 +32,60 @@
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-		<link rel="stylesheet" type="text/css" href="css/ratchet.css">
-        <title>Hello World</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" type="text/css" href="css/ratchet.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <title>Jodle</title>
     </head>
     <body>
-        <div class="app">
-            <h1>HELLO WORLD</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div>
-		<button class="btn"><span class="icon icon-home"></span>Test</button>
-		<script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
-		<script type="text/javascript" src="js/ratchet.js"></script>
+        <header class="bar bar-nav">
+            <h1 class="title">Page d'accueil</h1>
+        </header>
+        
+        <ul class="table-view">
+            <li class="table-view-cell media">
+                <a class="navigate-right">
+                    <span class="media-object pull-left icon icon-edit"></span>
+                    <div class="media-body">
+                        Envoyer un message
+                    </div>
+                </a>
+            </li>
+            <li class="table-view-cell media">
+                <a class="navigate-right">
+                    <span class="media-object pull-left icon icon-info"></span>
+                    <div class="media-body">
+                        Messages reçus
+                    </div>
+                    <span class="badge">6</span>
+                </a>
+            </li>
+        </ul>
+
+        <nav class="bar bar-tab">
+            <a class="tab-item active" href="#">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">Accueil</span>
+            </a>
+            <a class="tab-item" href="#">
+                <span class="icon icon-person"></span>
+                <span class="tab-label">Profil</span>
+            </a>
+            <a class="tab-item" href="#">
+                <span class="icon icon-star-filled"></span>
+                <span class="tab-label">Favoris</span>
+            </a>
+            <a class="tab-item" href="#">
+                <span class="icon icon-search"></span>
+                <span class="tab-label">Recherche</span>
+            </a>
+            <a class="tab-item" href="#">
+                <span class="icon icon-gear"></span>
+                <span class="tab-label">Paramètres</span>
+            </a>
+        </nav>
+        <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
+        <script type="text/javascript" src="js/ratchet.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>
