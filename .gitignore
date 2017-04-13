@@ -5,6 +5,8 @@
 # Mac
 .DS_Store
 
+platforms/*
+
 # iOS
 platforms/ios/build/
 platforms/ios/www/
