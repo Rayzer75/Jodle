@@ -19,7 +19,9 @@
 
 function inscription(e) {
 }
-
+function redirecRegister(){
+    window.location("register.html");
+}
 
 function enableChat() {
         var socket = io();
@@ -54,7 +56,8 @@ var app = {
         this.receivedEvent('deviceready');
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         $("#action_add").bind("submit", inscription);
-		enableChat();
+        $("#redirec_register").bind("click",redirecRegister);
+        enableChat();
     },
 
     // Update DOM on a Received Event
