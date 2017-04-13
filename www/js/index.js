@@ -16,6 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+function inscription(e) {
+    
+}
+
 var app = {
     // Application Constructor
     initialize: function() {
@@ -28,6 +33,8 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
         this.receivedEvent('deviceready');
+        // action_add (id pour s'inscrire avec le formulaire) (soumission)
+        $("#action_add").bind("submit", inscription);
     },
 
     // Update DOM on a Received Event
