@@ -3,6 +3,15 @@
 	"version": "1.0.0",
 	"keywords": ["util", "functional", "server", "client", "browser"],
 	"author": "shihf",
-	"contributors": [],
-	"dependencies": {}
+	"contributors": ["hourliers", "rener"],
+	"dependencies": {
+		"body-parser": "^1.17.0",
+		"express": "^4.14.1",
+		"mustache-express": "^1.2.4",
+		"pg-promise": "^5.5.7",
+		"socket.io": "^1.7.3"
+	},
+	"scripts": {
+		"start": "node main.js"
+	}
 }

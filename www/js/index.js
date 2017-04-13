@@ -18,8 +18,27 @@
  */
 
 function inscription(e) {
-    
 }
+
+
+function enableChat() {
+        var socket = io();
+        $('#chat').submit(function(){
+          socket.emit('chat message', $('#m').val());
+          $('#m').val('');
+          return false;
+        });
+        socket.on('chat message', function(msg){
+          $('#messages').append($('<li class="table-view-cell">').text(msg));
+          window.scrollTo(0, document.body.scrollHeight);
+        });
+}
+/*
+$("document").ready(function () {
+	enableChat();
+	alert("hello world");
+});
+*/
 
 var app = {
     // Application Constructor
@@ -35,6 +54,7 @@ var app = {
         this.receivedEvent('deviceready');
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         $("#action_add").bind("submit", inscription);
+		enableChat();
     },
 
     // Update DOM on a Received Event
