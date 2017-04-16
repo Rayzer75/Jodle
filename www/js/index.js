@@ -20,7 +20,10 @@
 function inscription(e) {
 }
 function redirecRegister(){
-    window.location("register.html");
+    window.location.href = 'register.html';
+}
+function callbackFunction() {
+    alert('Volume up Button is pressed!');
 }
 
 function enableChat() {
@@ -38,7 +41,7 @@ function enableChat() {
 /*
 $("document").ready(function () {
 	enableChat();
-	alert("hello world");
+        $("#redirec_register").bind("click",redirecRegister);
 });
 */
 
@@ -53,24 +56,14 @@ var app = {
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
     onDeviceReady: function() {
-        this.receivedEvent('deviceready');
+        console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         $("#action_add").bind("submit", inscription);
         $("#redirec_register").bind("click",redirecRegister);
+        $(document).bind("volumeupbutton", callbackFunction);
         enableChat();
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
     }
+
 };
 
 app.initialize();

@@ -7,16 +7,12 @@
         "files": {}
     },
     "installed_plugins": {
-        "cordova-plugin-whitelist": {
+        "cordova-plugin-console": {
             "PACKAGE_NAME": "fr.ensimag.Jodle"
         },
-        "cordova-plugin-contacts": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "fr.ensimag.Jodle"
         }
     },
-    "dependent_plugins": {
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "fr.ensimag.Jodle"
-        }
-    }
+    "dependent_plugins": {}
 }
