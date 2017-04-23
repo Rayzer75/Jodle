@@ -19,7 +19,7 @@
 
 function inscription(e) {
 }
-function redirecRegister(){
+function redirecRegister() {
     window.location.href = 'register.html';
 }
 function callbackFunction() {
@@ -27,27 +27,27 @@ function callbackFunction() {
 }
 
 function enableChat() {
-        var socket = io();
-        $('#chat').submit(function(){
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('chat message', function(msg){
-          $('#messages').append($('<li class="table-view-cell">').text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
+    var socket = io.connect('http://localhost:8080');
+    $('#chat').submit(function () {
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        return false;
+    });
+    socket.on('chat message', function (msg) {
+        $('#messages').append($('<li class="table-view-cell">').text(msg));
+        window.scrollTo(0, document.body.scrollHeight);
+    });
 }
 /*
-$("document").ready(function () {
-	enableChat();
-        $("#redirec_register").bind("click",redirecRegister);
-});
-*/
+ $("document").ready(function () {
+ enableChat();
+ $("#redirec_register").bind("click",redirecRegister);
+ });
+ */
 
 var app = {
     // Application Constructor
-    initialize: function() {
+    initialize: function () {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
 
@@ -55,11 +55,11 @@ var app = {
     //
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
-    onDeviceReady: function() {
+    onDeviceReady: function () {
         console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         $("#action_add").bind("submit", inscription);
-        $("#redirec_register").bind("click",redirecRegister);
+        $("#redirec_register").bind("click", redirecRegister);
         $(document).bind("volumeupbutton", callbackFunction);
         enableChat();
     }

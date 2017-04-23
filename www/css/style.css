@@ -13,7 +13,7 @@
 #chat input { 
 	border: 0; 
 	padding: 10px; 
-	width: 90%; 
+	width: 80%; 
 	margin-right: .5%; 
 }
 
@@ -21,7 +21,7 @@
 	text-align: center;
 	cursor: pointer;
 	border-radius: 3px;
-	width: 9%; 
+	width: 18%; 
 	background: #5cb85c;
 	border: none; 
 	padding: 10px; 
