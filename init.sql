@@ -53,13 +53,14 @@ CREATE TABLE utilisateur (
 CREATE TABLE media(
     idMedia Integer NOT NULL,
     typeMedia character varying(30) NOT NULL,
-    idEmetteur Integer NOT NULL,
-    idDestinataire Integer NOT NULL, 
-    timeout Integer)
+    idEmetteur character NOT NULL,
+    idDestinataire character NOT NULL, 
+    timeout Integer
+);
 
 
 
-ALTER TABLE fonctions OWNER TO hourliesss;
+-- ALTER TABLE fonctions OWNER TO hourliesss;
 
 
 
@@ -67,9 +68,13 @@ ALTER TABLE ONLY utilisateur
     ADD CONSTRAINT utilisateur_pk PRIMARY KEY (telephone);
 
 ALTER TABLE ONLY media
-    ADD CONSTRAINT media_pk PRIMARY KEY(idMedia);
+    ADD CONSTRAINT media_pk PRIMARY KEY(idMedia, typeMedia);
 
+ALTER TABLE ONLY media
+      ADD CONSTRAINT emetteur_fk FOREIGN KEY (idEmetteur) REFERENCES utilisateur(telephone);
 
+ALTER TABLE ONLY media
+      ADD CONSTRAINT destinataire_fk FOREIGN KEY (idDestinataire) REFERENCES utilisateur(telephone);
 
 
 --

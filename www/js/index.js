@@ -19,30 +19,35 @@
 
 function inscription(e) {
 }
-
+function redirecRegister() {
+    window.location.href = 'register.html';
+}
+function callbackFunction() {
+    alert('Volume up Button is pressed!');
+}
 
 function enableChat() {
-        var socket = io();
-        $('#chat').submit(function(){
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('chat message', function(msg){
-          $('#messages').append($('<li class="table-view-cell">').text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
+    var socket = io.connect('http://localhost:8080');
+    $('#chat').submit(function () {
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        return false;
+    });
+    socket.on('chat message', function (msg) {
+        $('#messages').append($('<li class="table-view-cell">').text(msg));
+        window.scrollTo(0, document.body.scrollHeight);
+    });
 }
 /*
-$("document").ready(function () {
-	enableChat();
-	alert("hello world");
-});
-*/
+ $("document").ready(function () {
+ enableChat();
+ $("#redirec_register").bind("click",redirecRegister);
+ });
+ */
 
 var app = {
     // Application Constructor
-    initialize: function() {
+    initialize: function () {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
 
@@ -50,24 +55,15 @@ var app = {
     //
     // Bind any cordova events here. Common events are:
     // 'pause', 'resume', etc.
-    onDeviceReady: function() {
-        this.receivedEvent('deviceready');
+    onDeviceReady: function () {
+        console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         $("#action_add").bind("submit", inscription);
-		enableChat();
-    },
-
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
-
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
-
-        console.log('Received Event: ' + id);
+        $("#redirec_register").bind("click", redirecRegister);
+        $(document).bind("volumeupbutton", callbackFunction);
+        enableChat();
     }
+
 };
 
 app.initialize();
