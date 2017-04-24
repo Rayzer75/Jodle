@@ -6,7 +6,7 @@ function listContacts(req, res) {
      {
          if (error == null)
          {
-             res.status(200).render('contacts', {fonctions : data});
+             res.status(200).render('contacts', {available_contacts : data});
              console.log(data);
          }
          else

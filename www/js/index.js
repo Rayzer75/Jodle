@@ -17,84 +17,99 @@
  * under the License.
  */
 function connection(e) {
-    console.log("OUI");
-    /*$.ajax({
-       url : '/api/user',
-       type : 'GET',
-       data : $(this).serialize(),
-       contentType : 'application/x-www-form-urlencoded'
-    });
-    e.preventDefault();*/
+	console.log("OUI");
+	/*$.ajax({
+	 url : '/api/user',
+	 type : 'GET',
+	 data : $(this).serialize(),
+	 contentType : 'application/x-www-form-urlencoded'
+	 });
+	 e.preventDefault();*/
 }
 
-var lastMessage;
-
 function inscription(e) {
-    $.ajax({
-       url : '/api/user/',
-       type : 'POST',
-       data : $(this).serialize(),
-       contentType : 'application/x-www-form-urlencoded',
-       success : function(code_html,statut){
-           window.location.href = 'registerVal.html';
-       },
-       error : function(code_html,statut){
-           window.location.href = 'errorPseudo.html';
-       }
-    });
-    e.preventDefault();
+	$.ajax({
+		url: '/api/user/',
+		type: 'POST',
+		data: $(this).serialize(),
+		contentType: 'application/x-www-form-urlencoded',
+		success: function (code_html, statut) {
+			window.location.href = 'registerVal.html';
+		},
+		error: function (code_html, statut) {
+			window.location.href = 'errorPseudo.html';
+		}
+	});
+	e.preventDefault();
+}
+
+function getContactsList() {
+	var options = new ContactFindOptions();
+	options.filter = "";
+	options.multiple = true;
+	options.hasPhoneNumber = true;
+	filter = ["name", "phoneNumbers"];
+	navigator.contacts.find(filter, onSuccessContactsList, onErrorContactsList, options);
 }
 
 function redirecRegister() {
-    window.location.href = 'register.html';
+	window.location.href = 'register.html';
 }
 
 function enableChat() {
-    var socket = io.connect('http://129.88.242.138:8080');
-    $('#chat').submit(function () {
-		if ($('#m').val().length != 0) { // a cause de cordova
-			socket.emit('chat message', $('#m').val()); // TODO : concatener le pseudo
-			console.log("emission");
-		}
-        $('#m').val('');
-        return false;
-    });
-    socket.on('chat message', function (msg) {
-		if (lastMessage != msg) { // a cause de cordova
-			$('#messages').append($('<li class="table-view-cell">').text(msg));
-		}
-		lastMessage = msg;
+	var socket = io.connect('http://129.88.242.138:8080');
+	$('#chat').submit(function () {
+		socket.emit('chat message', $('#m').val()); // TODO : concatener le pseudo
+		$('#m').val('');
+		return false;
+	});
+	socket.on('chat message', function (msg) {
+		$('#messages').append($('<li class="table-view-cell">').text(msg));
 		console.log("append");
-        window.scrollTo(0, document.body.scrollHeight);
-    });
+		window.scrollTo(0, document.body.scrollHeight);
+	});
 }
-
+/*
  $("document").ready(function () {
  enableChat();
  $("#action_add").bind("submit", inscription);
- $("#redirec_register").bind("click",redirecRegister);
+ $("#redirec_register").bind("click", redirecRegister);
  });
- 
+ */
+
+function onSuccessContactsList(contacts) {
+//	for (var i = 0; i < contacts.length; i++) {
+//		console.log("Nom = " + contacts[i].name.familyName +
+//				"\n Prenom = " + contacts[i].name.givenName +
+//				"\n Telephone = " + contacts[i].phoneNumbers[0].value);
+//	}
+	// TODO : requete AJAX
+}
+
+// onError: Failed to get the contacts
+
+function onErrorContactsList(contactError) {
+	alert('onError!');
+}
 
 var app = {
-    // Application Constructor
-    initialize: function () {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
-
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
-    onDeviceReady: function () {
-        console.log("console.log works well");
-        // action_add (id pour s'inscrire avec le formulaire) (soumission)
-        $("#action_add").bind("submit", inscription);
-        $("#redirec_register").bind("click", redirecRegister);
-        $("#connect").bind("submit",connection);
-        enableChat();
-    }
+	// Application Constructor
+	initialize: function () {
+		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+	},
+	// deviceready Event Handler
+	//
+	// Bind any cordova events here. Common events are:
+	// 'pause', 'resume', etc.
+	onDeviceReady: function () {
+		console.log("console.log works well");
+		// action_add (id pour s'inscrire avec le formulaire) (soumission)
+		$("#action_add").bind("submit", inscription);
+		$("#redirec_register").bind("click", redirecRegister);
+		$("#connect").bind("submit", connection);
+		$("#contacts").bind("click", getContactsList);
+		enableChat();
+	}
 
 };
-
 app.initialize();
