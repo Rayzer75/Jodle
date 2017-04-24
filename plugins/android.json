@@ -10,9 +10,16 @@
         "cordova-plugin-console": {
             "PACKAGE_NAME": "fr.ensimag.Jodle"
         },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "fr.ensimag.Jodle"
+        },
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "fr.ensimag.Jodle"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "fr.ensimag.Jodle"
+        }
+    }
 }
