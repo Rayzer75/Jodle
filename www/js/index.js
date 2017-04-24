@@ -18,12 +18,23 @@
  */
 
 function inscription(e) {
+    $.ajax({
+       url : '/api/user',
+       type : 'POST',
+       data : $(this).serialize(),
+       contentType : 'application/x-www-form-urlencoded'
+       success : function(code_html,statut){
+           window.location.href = 'registerVal.html';
+       }
+       error : function(code_html,statut){
+           window.location.href = 'registerVal.html';
+       }
+    });
+    e.preventDefault();
 }
+
 function redirecRegister() {
     window.location.href = 'register.html';
-}
-function callbackFunction() {
-    alert('Volume up Button is pressed!');
 }
 
 function enableChat() {
@@ -60,7 +71,6 @@ var app = {
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         $("#action_add").bind("submit", inscription);
         $("#redirec_register").bind("click", redirecRegister);
-        $(document).bind("volumeupbutton", callbackFunction);
         enableChat();
     }
 
