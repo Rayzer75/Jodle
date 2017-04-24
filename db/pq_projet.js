@@ -33,7 +33,7 @@ function getPosition(telephone, callback){
 }
 
 function getMedia(id, type, callback){
-    var requete = 'select Id, TypeMedia, IdEmetteur, IdDestinataire, DateEmission, TimeOut from public.media where id = ${id} and typemedia = ${type}'
+    var requete = `select Id, TypeMedia, IdEmetteur, IdDestinataire, DateEmission, TimeOut from public.media where id = ${id} and typemedia = ${type}`
     console.log(requete);
     
     db.one(requete, null)
@@ -60,7 +60,7 @@ function addUser(telephone, pseudo, mdp, nom, prenom, position, callback){
 }
     
 function updateUser(telephone, pseudo,mdp, nom, prenom, position, callback){
-    var requete = 'update public.utilisateur set  nom = ${nom}, prenom = ${prenom}, pseudo = ${pseudo}, mdp = ${mdp}, position = ${position} where Telephone = ${telephone}'
+    var requete = `update public.utilisateur set  nom = ${nom}, prenom = ${prenom}, pseudo = ${pseudo}, mdp = ${mdp}, position = ${position} where Telephone = ${telephone}`
     console.log(requete);
     
     db.none(requete, null)
@@ -73,7 +73,20 @@ function updateUser(telephone, pseudo,mdp, nom, prenom, position, callback){
 }
 
 function deleteUser(telephone, callback){
-    var requete = 'delete from public.utilisateur where Telephone = ${telephone}'
+    var requete = `delete from public.utilisateur where Telephone = ${telephone}`
+    console.log(requete);
+    
+    db.none(requete, null)
+            .then(function (data)  {
+                callback(null, data)
+    })
+            .catch(function(error)  {
+                callback(error, null)
+    })      
+}
+
+function checkUser(mdp,telephone,pseudo, callback){
+    var requete = `select pseudo from public.utilisateur where Telephone = ${telephone} and pseudo=${pseudo} and mdp=${mdp}`
     console.log(requete);
     
     db.none(requete, null)
@@ -91,5 +104,6 @@ module.exports = {
   getMedia,
   updateUser,
   addUser,
-  deleteUser
+  deleteUser,
+  checkUser
 };

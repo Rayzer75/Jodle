@@ -16,31 +16,39 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+function redirectConnect() {
+    window.location.href = 'index.html';
+}
+
 function connection(e) {
-	console.log("OUI");
-	/*$.ajax({
-	 url : '/api/user',
-	 type : 'GET',
-	 data : $(this).serialize(),
-	 contentType : 'application/x-www-form-urlencoded'
-	 });
-	 e.preventDefault();*/
+    $.ajax({
+       url : 'http://129.88.241.142:8080/api/user/',
+       type : 'GET',
+       success : function(code,statut){
+           window.location.href = 'menu.html';
+           console.log(code);
+       },
+       error : function(code_html,statut){
+           window.location.href = 'errorConnect.html';
+       }
+    });
+    e.preventDefault();
 }
 
 function inscription(e) {
 	$.ajax({
-		url: '/api/user/',
-		type: 'POST',
-		data: $(this).serialize(),
-		contentType: 'application/x-www-form-urlencoded',
-		success: function (code_html, statut) {
-			window.location.href = 'registerVal.html';
-		},
-		error: function (code_html, statut) {
-			window.location.href = 'errorPseudo.html';
-		}
-	});
-	e.preventDefault();
+       url : 'http://129.88.241.142:8080/api/user/',
+       type : 'POST',
+       data : $(this).serialize(),
+       contentType : 'application/x-www-form-urlencoded',
+       success : function(code_html,statut){
+           window.location.href = 'registerVal.html';
+       },
+       error : function(code_html,statut){
+           window.location.href = 'errorPseudo.html';
+       }
+    });
+    e.preventDefault();
 }
 
 function getContactsList() {
@@ -69,6 +77,7 @@ function enableChat() {
 		window.scrollTo(0, document.body.scrollHeight);
 	});
 }
+
 /*
  $("document").ready(function () {
  enableChat();
@@ -87,7 +96,6 @@ function onSuccessContactsList(contacts) {
 }
 
 // onError: Failed to get the contacts
-
 function onErrorContactsList(contactError) {
 	alert('onError!');
 }
@@ -102,14 +110,21 @@ var app = {
 	// Bind any cordova events here. Common events are:
 	// 'pause', 'resume', etc.
 	onDeviceReady: function () {
-		console.log("console.log works well");
-		// action_add (id pour s'inscrire avec le formulaire) (soumission)
-		$("#action_add").bind("submit", inscription);
-		$("#redirec_register").bind("click", redirecRegister);
-		$("#connect").bind("submit", connection);
-		$("#contacts").bind("click", getContactsList);
-		enableChat();
-	}
+        console.log("console.log works well");
+        // action_add (id pour s'inscrire avec le formulaire) (soumission)
+        // inscription
+        $("#action_add").bind("submit", inscription);
+        // Redirection vers la page d'inscription
+        $("#redirec_register").bind("click", redirecRegister);
+        //Bouton connexion
+        $("#connect").bind("submit",connection);
+        // Rediriger vers la page de connexion
+        $("#connect_page").bind("click", redirectConnect);
+        // Retourner a la page de connexion apres creation de compte
+        $("#redirect_regis").bind("click", redirectConnect);
+        
+        enableChat();
+    }
 
 };
 app.initialize();

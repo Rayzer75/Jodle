@@ -24,14 +24,24 @@ function addUser(req,res){
         var prenom = req.body.prenom
         var tel = req.body.tel
         
-        db.addUser(tel, pseudo, mdp, nom, prenom, 1,function () {
+    db.addUser(tel, pseudo, mdp, nom, prenom, 1,function () {
         res.status(200).send("ok");
     })
 }
         
-
+function checkUser(req,res) {
+    var pseudo = req.body.pseudo;
+    var mdp = req.body.mdp;
+    var telephone = req.body.telephone;
+    
+    db.checkUser(mdp,telephone,pseudo,function (data) {
+        res.status(200).send("ok");
+        res.pseudo = data;
+    })
+}
 
 module.exports = {
     listContacts,
-    addUser
-};
+    addUser,
+    checkUser
+}
