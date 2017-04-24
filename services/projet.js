@@ -27,7 +27,11 @@ function addUser(req,res){
         db.addUser(tel, pseudo, mdp, nom, prenom, 1,function () {
         res.status(200).send("ok");
     })
-    }
+}
         
 
 
+module.exports = {
+    listContacts,
+    addUser
+};

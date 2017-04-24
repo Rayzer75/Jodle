@@ -17,18 +17,19 @@
  * under the License.
  */
 function connection(e) {
-    $.ajax({
+    console.log("OUI");
+    /*$.ajax({
        url : '/api/user',
        type : 'GET',
        data : $(this).serialize(),
        contentType : 'application/x-www-form-urlencoded'
     });
-    e.preventDefault();
+    e.preventDefault();*/
 }
 
 function inscription(e) {
     $.ajax({
-       url : '/api/user',
+       url : '/api/user/',
        type : 'POST',
        data : $(this).serialize(),
        contentType : 'application/x-www-form-urlencoded',
@@ -65,6 +66,7 @@ function enableChat() {
 
  $("document").ready(function () {
  enableChat();
+ $("#action_add").bind("submit", inscription);
  $("#redirec_register").bind("click",redirecRegister);
  });
  

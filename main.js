@@ -5,23 +5,22 @@ var server = require('http').createServer(app);
 var bodyParser = require('body-parser')  // envoie des paramètres en POST
 var io = require('socket.io')(server);
 var mustacheExpress = require('mustache-express');
-/*
-var surface_router = require('./routes/surfaces_ctrl');
-var surface_services = require('./services/surfaces')
-*/
+var app_router = require('./routes/ctrl');
+var app_services = require('./services/projet')
+
 app.use(bodyParser.urlencoded({     // pour gérer les URL-encoded bodies (envoie formulaire en POST)
   extended: true
 })); 
 
 app.set('views', path.join( 'public/views'));
-//app.use(bodyParser.json) // permet de lire le json envoyé en POST depuis le client
+app.use(bodyParser.json()) // permet de lire le json envoyé en POST depuis le client
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');
 
-/*
-app.use('/api/', surface_router);
 
-io.on('connect', function (socket){
+app.use('/api/', app_router);
+
+/*io.on('connect', function (socket){
     console.log("Start animation");
     surface_services.animationOn(socket)
     
@@ -29,8 +28,8 @@ io.on('connect', function (socket){
         console.log("Stop animation")
         surface_services.animationOff(socket)
     })
-})
-*/
+})*/
+
 // 
 // le repertoire public va contenir les
 // fichiers statiques
@@ -46,6 +45,10 @@ app.get('/chat', function(req, res){
 
 app.get('/contact', function(req, res){
 	res.sendFile(__dirname + '/www/contact.html');
+});
+
+app.get('/register', function(req, res){
+	res.sendFile(__dirname + '/www/register.html');
 });
 
 io.on('connection', function(socket){
