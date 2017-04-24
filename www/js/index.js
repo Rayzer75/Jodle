@@ -16,20 +16,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+function redirectConnect() {
+    window.location.href = 'index.html';
+}
+
 function connection(e) {
-    console.log("OUI");
-    /*$.ajax({
-       url : '/api/user',
+    $.ajax({
+       url : 'http://129.88.241.142:8080/api/user/',
        type : 'GET',
-       data : $(this).serialize(),
-       contentType : 'application/x-www-form-urlencoded'
+       success : function(code,statut){
+           window.location.href = 'menu.html';
+           console.log(code);
+       },
+       error : function(code_html,statut){
+           window.location.href = 'errorConnect.html';
+       }
     });
-    e.preventDefault();*/
+    e.preventDefault();
 }
 
 function inscription(e) {
     $.ajax({
-       url : '/api/user/',
+       url : 'http://129.88.241.142:8080/api/user/',
        type : 'POST',
        data : $(this).serialize(),
        contentType : 'application/x-www-form-urlencoded',
@@ -48,7 +56,7 @@ function redirecRegister() {
 }
 
 function enableChat() {
-    var socket = io.connect('http://129.88.242.138:8080');
+    var socket = io.connect('http://129.88.242.142:8080');
     $('#chat').submit(function () {
 		if ($('#m').val().length != 0) {
 			socket.emit('chat message', $('#m').val());
@@ -64,11 +72,11 @@ function enableChat() {
     });
 }
 
- $("document").ready(function () {
- enableChat();
- $("#action_add").bind("submit", inscription);
- $("#redirec_register").bind("click",redirecRegister);
- });
+$("document").ready(function () {
+    enableChat();
+    $("#action_add").bind("submit", inscription);
+    $("#redirec_register").bind("click",redirecRegister);
+});
  
 
 var app = {
@@ -84,9 +92,17 @@ var app = {
     onDeviceReady: function () {
         console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
+        // inscription
         $("#action_add").bind("submit", inscription);
+        // Redirection vers la page d'inscription
         $("#redirec_register").bind("click", redirecRegister);
+        //Bouton connexion
         $("#connect").bind("submit",connection);
+        // Rediriger vers la page de connexion
+        $("#connect_page").bind("click", redirectConnect);
+        // Retourner a la page de connexion apres creation de compte
+        $("#redirect_regis").bind("click", redirectConnect);
+        
         enableChat();
     }
 
