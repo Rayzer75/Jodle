@@ -22,12 +22,12 @@ function inscription(e) {
        url : '/api/user',
        type : 'POST',
        data : $(this).serialize(),
-       contentType : 'application/x-www-form-urlencoded'
+       contentType : 'application/x-www-form-urlencoded',
        success : function(code_html,statut){
            window.location.href = 'registerVal.html';
-       }
+       },
        error : function(code_html,statut){
-           window.location.href = 'registerVal.html';
+           window.location.href = 'errorPseudo.html';
        }
     });
     e.preventDefault();
