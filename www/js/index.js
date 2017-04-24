@@ -16,16 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+function connection(e) {
+    console.log("OUI");
+    /*$.ajax({
+       url : '/api/user',
+       type : 'GET',
+       data : $(this).serialize(),
+       contentType : 'application/x-www-form-urlencoded'
+    });
+    e.preventDefault();*/
+}
 
 var lastMessage;
 
 function inscription(e) {
+    $.ajax({
+       url : '/api/user/',
+       type : 'POST',
+       data : $(this).serialize(),
+       contentType : 'application/x-www-form-urlencoded',
+       success : function(code_html,statut){
+           window.location.href = 'registerVal.html';
+       },
+       error : function(code_html,statut){
+           window.location.href = 'errorPseudo.html';
+       }
+    });
+    e.preventDefault();
 }
+
 function redirecRegister() {
     window.location.href = 'register.html';
-}
-function callbackFunction() {
-    alert('Volume up Button is pressed!');
 }
 
 function enableChat() {
@@ -50,6 +71,7 @@ function enableChat() {
 
  $("document").ready(function () {
  enableChat();
+ $("#action_add").bind("submit", inscription);
  $("#redirec_register").bind("click",redirecRegister);
  });
  
@@ -69,7 +91,7 @@ var app = {
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         $("#action_add").bind("submit", inscription);
         $("#redirec_register").bind("click", redirecRegister);
-        $(document).bind("volumeupbutton", callbackFunction);
+        $("#connect").bind("submit",connection);
         enableChat();
     }
 
