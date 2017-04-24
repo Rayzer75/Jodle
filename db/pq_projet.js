@@ -46,8 +46,8 @@ function getMedia(id, type, callback){
 }
 
 
-function addUser(telephone, nom, prenom, position, callback){
-    var requete = 'insert into public.utilisateur values(${telephone}, ${nom},${prenom}, ${position})'
+function addUser(telephone, pseudo, mdp, nom, prenom, position, callback){
+    var requete = 'insert into public.utilisateur values(${pseudo},${mdp},${telephone}, ${nom},${prenom}, ${position})'
     console.log(requete);
     
     db.none(requete, null)
@@ -59,8 +59,8 @@ function addUser(telephone, nom, prenom, position, callback){
     })      
 }
     
-function updateUser(telephone, nom, prenom, position, callback){
-    var requete = 'update public.utilisateur set  nom = ${nom}, prenom = ${prenom}, position = ${position} where Telephone = ${telephone}'
+function updateUser(telephone, pseudo,mdp, nom, prenom, position, callback){
+    var requete = 'update public.utilisateur set  nom = ${nom}, prenom = ${prenom}, pseudo = ${pseudo}, mdp = ${mdp}, position = ${position} where Telephone = ${telephone}'
     console.log(requete);
     
     db.none(requete, null)

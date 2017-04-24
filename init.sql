@@ -45,6 +45,8 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE utilisateur (
+    pseudo character varying(30) NOT NULL,
+    mdp character varying(30) NOT NULL,
     telephone character varying(15) NOT NULL,
     nom character varying(30) NOT NULL,
     prenom character varying(30) NOT NULL,
