@@ -47,7 +47,7 @@ function getMedia(id, type, callback){
 
 
 function addUser(telephone, nom, prenom, position, callback){
-    var requete = 'insert into public.utilisateur values(${telephone}, ${nom},${prenom}, ${position}'
+    var requete = 'insert into public.utilisateur values(${telephone}, ${nom},${prenom}, ${position})'
     console.log(requete);
     
     db.none(requete, null)

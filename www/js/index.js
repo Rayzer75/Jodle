@@ -16,6 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+function connection(e) {
+    $.ajax({
+       url : '/api/user',
+       type : 'GET',
+       data : $(this).serialize(),
+       contentType : 'application/x-www-form-urlencoded'
+    });
+    e.preventDefault();
+}
 
 function inscription(e) {
     $.ajax({
@@ -75,6 +84,7 @@ var app = {
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         $("#action_add").bind("submit", inscription);
         $("#redirec_register").bind("click", redirecRegister);
+        $("#connect").bind("submit",connection);
         enableChat();
     }
 
