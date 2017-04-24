@@ -38,14 +38,18 @@ function redirecRegister() {
 }
 
 function enableChat() {
-    var socket = io.connect('http://localhost:8080');
+    var socket = io.connect('http://129.88.242.138:8080');
     $('#chat').submit(function () {
-        socket.emit('chat message', $('#m').val());
+		if ($('#m').val().length != 0) {
+			socket.emit('chat message', $('#m').val());
+			console.log("emission");
+		}
         $('#m').val('');
         return false;
     });
     socket.on('chat message', function (msg) {
         $('#messages').append($('<li class="table-view-cell">').text(msg));
+		console.log("append");
         window.scrollTo(0, document.body.scrollHeight);
     });
 }
