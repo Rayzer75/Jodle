@@ -24,7 +24,8 @@ SET row_security = off;
 
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-
+CREATE EXTANSION postgis;
+CREATE EXTENSION postgis_topology;
 
 --
 -- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
