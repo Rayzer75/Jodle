@@ -10,13 +10,59 @@
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
-        <div class="card">
-          <ul class="table-view">
-            <li class="table-view-cell"><label>Nom : </label> Nom</li>
-            <li class="table-view-cell"><label>Prénom : </label> Prénom</li>
-            <li class="table-view-cell"><label>Numéro de Téléphone : </label>Numéro de Téléphone</li>
-          </ul>
-        </div>        
+		<header class="bar bar-nav">
+            <h1 class="title">Contacts</h1>
+        </header>
+		<ul class="table-view">
+			<li class="table-view-divider sucess">Contacts disponibles</li>
+			<li class="table-view-cell media">
+				<a class="navigate-right">
+					<img class="media-object pull-left" src="http://placehold.it/42x42">
+					<div class="media-body">
+						Pseudo 1
+						<ul>
+							<li><label>Nom : </label> Nom 1</li>
+							<li><label>Prénom : </label> Prénom 1</li>
+							<li><label>Numéro de Téléphone : </label>Numéro de Téléphone 1</li>
+						</ul>
+					</div>
+				</a>
+			</li>
+			<li class="table-view-divider danger">Contacts non disponibles</li>
+			<li class="table-view-cell media">
+					<img class="media-object pull-left" src="http://placehold.it/42x42">
+					<div class="media-body">
+						Pseudo 2
+						<ul>
+							<li><label>Nom : </label> Nom 2</li>
+							<li><label>Prénom : </label> Prénom 2</li>
+							<li><label>Numéro de Téléphone : </label>Numéro de Téléphone 2</li>
+						</ul>
+					</div>
+			</li>
+		</ul>
+		<nav class="bar bar-tab">
+            <a class="tab-item" href="#">
+                <span class="icon icon-home"></span>
+                <span class="tab-label">Accueil</span>
+            </a>
+            <a class="tab-item" href="#">
+                <span class="icon icon-person"></span>
+                <span class="tab-label">Profil</span>
+            </a>
+            <a id="list_contact" class="tab-item active" href="#">
+                <span class="icon icon-list"></span>
+                <span class="tab-label">Contacts</span>
+            </a>
+            <a class="tab-item" href="#">
+                <span class="icon icon-search"></span>
+                <span class="tab-label">Recherche</span>
+            </a>
+            <a class="tab-item" href="#">
+                <span class="icon icon-gear"></span>
+                <span class="tab-label">Paramètres</span>
+            </a>
+        </nav>
         <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
         <script type="text/javascript" src="js/ratchet.js"></script>
         <script type="text/javascript" src="cordova.js"></script>

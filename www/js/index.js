@@ -35,6 +35,8 @@ function connection(e) {
     e.preventDefault();
 }
 
+var lastMessage;
+
 function inscription(e) {
     $.ajax({
        url : 'http://129.88.241.142:8080/api/user/',
@@ -58,15 +60,18 @@ function redirecRegister() {
 function enableChat() {
     var socket = io.connect('http://129.88.242.142:8080');
     $('#chat').submit(function () {
-		if ($('#m').val().length != 0) {
-			socket.emit('chat message', $('#m').val());
+		if ($('#m').val().length != 0) { // a cause de cordova
+			socket.emit('chat message', $('#m').val()); // TODO : concatener le pseudo
 			console.log("emission");
 		}
         $('#m').val('');
         return false;
     });
     socket.on('chat message', function (msg) {
-        $('#messages').append($('<li class="table-view-cell">').text(msg));
+		if (lastMessage != msg) { // a cause de cordova
+			$('#messages').append($('<li class="table-view-cell">').text(msg));
+		}
+		lastMessage = msg;
 		console.log("append");
         window.scrollTo(0, document.body.scrollHeight);
     });
