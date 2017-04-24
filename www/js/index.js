@@ -38,12 +38,12 @@ function enableChat() {
         window.scrollTo(0, document.body.scrollHeight);
     });
 }
-/*
+
  $("document").ready(function () {
  enableChat();
  $("#redirec_register").bind("click",redirecRegister);
  });
- */
+ 
 
 var app = {
     // Application Constructor
