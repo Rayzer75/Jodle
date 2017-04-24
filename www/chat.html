@@ -39,28 +39,29 @@
     </head>
     <body>
         <header class="bar bar-nav">
-			<button class="btn btn-link btn-nav pull-left">
-				<span class="icon icon-left-nav"></span>
-				Contacts
-			</button>
-			<h1 class="title">Chat</h1>
-		</header>
+            <button class="btn btn-link btn-nav pull-left">
+                <span class="icon icon-left-nav"></span>
+                Contacts
+            </button>
+            <h1 class="title">Chat</h1>
+        </header>
 
         <ul id="messages" class="table-view">
             <li class="table-view-cell"><strong>Moi : </strong>Coucou ! Tu vas bien ?</li>
-			<li class="table-view-cell message-dest"><strong>Lui : </strong>Très bien et toi ?</li>
-			<li class="table-view-cell"><strong>Moi : </strong>Ca va super !</li>
+            <li class="table-view-cell message-dest"><strong>Lui : </strong>Très bien et toi ?</li>
+            <li class="table-view-cell"><strong>Moi : </strong>Ca va super !</li>
         </ul>
 
-		<form id="chat" action="">
-			<input id="m" autocomplete="off" />
-			<button>Envoyer</button>
-		</form>
-		
+        <form id="chat" action="">
+            <input id="m" autocomplete="off" />
+            <button>Envoyer</button>
+        </form>
+
         <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
         <script type="text/javascript" src="js/ratchet.js"></script>
         <script type="text/javascript" src="cordova.js"></script>
-		<script src="socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="js/mustache.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>
