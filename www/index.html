@@ -38,10 +38,10 @@
         <title>Jodle</title>
     </head>
     <body>
-        <form id="connect">
-            <input name="telephone" type="text" placeholder="Téléphone">
-            <input name="pseudo" type="text" placeholder="Pseudo">
-            <input name="mdp" type="password" placeholder="Mot de passe">
+        <form method="GET" id="connect">
+            <input id="telephone" name="telephone" type="text" placeholder="Téléphone">
+            <input id ="pseudo" name="pseudo" type="text" placeholder="Pseudo">
+            <input id="mdp" name="mdp" type="password" placeholder="Mot de passe">
             <button type="submit" class="btn btn-positive btn-block">Se connecter</button>
         </form>
         <br/>
@@ -52,7 +52,6 @@
     </a>
     <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
     <script type="text/javascript" src="js/ratchet.js"></script>
-    <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/socket.io.js"></script>
     <script type="text/javascript" src="js/mustache.js"></script>
     <script type="text/javascript" src="js/index.js"></script>

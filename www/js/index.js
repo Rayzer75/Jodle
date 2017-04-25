@@ -23,12 +23,13 @@ function redirectConnect() {
     window.location.href = 'index.html';
 }
 
-function connection(e) {
+function connection(e) {s
     $.ajax({
-        url: serverUrl + 'api/user/',
-        type: 'POST',
-        data: $(this).serialize(),
-        contentType: 'application/x-www-form-urlencoded',
+        url: serverUrl + 'api/user/' + $('#telephone').val() + '/' + $('#pseudo').val() + '/' + $('#mdp').val(),
+        type: 'GET',
+        //data: $(this).serialize(),
+        datatype: 'json',
+        //contentType: 'application/x-www-form-urlencoded',
         success: function (code_html, statut) {
             window.location.href = 'welcome.html';
             setPseudo(code_html);
@@ -88,14 +89,15 @@ function enableChat() {
     });
 }
 
-/*
+
  $("document").ready(function () {
  enableChat();
  $("#action_add").bind("submit", inscription);
  $("#redirec_register").bind("click", redirecRegister);
  $("#contacts_list").bind("click", onSuccessContactsList);
+ $("#connect").bind("submit", connection);
  });
- */
+
 
 function onSuccessContactsList(contacts) {
 //	for (var i = 0; i < contacts.length; i++) {

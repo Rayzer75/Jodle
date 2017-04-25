@@ -24,15 +24,16 @@ function addUser(req,res){
         var prenom = req.body.prenom
         var tel = req.body.tel
         
-    db.addUser(tel, pseudo, mdp, nom, prenom, 1,function () {
+    db.addUser(tel, pseudo, mdp, nom, prenom, 1,function (error,data) {
         res.status(200).send("ok");
     })
 }
         
 function checkUser(req,res) {
-    var pseudo = req.body.pseudo;
-    var mdp = req.body.mdp;
-    var telephone = req.body.telephone;
+    // params pour un get
+    var pseudo = req.params.pseudo;
+    var mdp = req.params.mdp;
+    var telephone = req.params.telephone;
     
     console.log("PASSE dans checkUser");
     db.checkUser(mdp,telephone,pseudo,function (error, data) {
@@ -41,6 +42,7 @@ function checkUser(req,res) {
             res.status(200).json({
                 pseudo : data.pseudo
             })
+            //res.status(200).send("ok");
             console.log("OUI projet.js");
         } else {
             res.status(500).send("Erreur : " + error)

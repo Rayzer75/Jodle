@@ -50,6 +50,9 @@ app.get('/contact', function(req, res){
 app.get('/register', function(req, res){
 	res.sendFile(__dirname + '/www/register.html');
 });
+app.get('/index', function(req, res){
+	res.sendFile(__dirname + '/www/index.html');
+});
 
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){

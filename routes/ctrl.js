@@ -7,7 +7,7 @@ router.get('/user/contacts/:id', service.listContacts);
 //router.put('/user/pos/:id', service.updatePosition);
 //router.get('/user/media/:type/:id', service.getMedia);
 //router.put('/user/', service.updateUser);
-router.get('/user/', service.checkUser);
+router.get('/user/:telephone/:pseudo/:mdp', service.checkUser);
 router.post('/user/', service.addUser);
 //router.delete('/user/', service.deleteUser);
 router.get('/contacts/', service.showContacts);
