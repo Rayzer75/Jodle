@@ -10,6 +10,6 @@ router.get('/user/contacts/:id', service.listContacts);
 router.post('/user/', service.addUser);
 router.get('/user/', service.checkUser);
 //router.delete('/user/', service.deleteUser);
-        
+router.get('/contacts/', service.showContacts);
 module.exports = router
 
