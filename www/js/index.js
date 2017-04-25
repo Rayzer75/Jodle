@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var serverUrl = 'http://192.168.0.10:8080/';
+var serverUrl = 'http://192.168.0.12:8080/';
 
 function redirectConnect() {
     window.location.href = 'index.html';
@@ -26,16 +26,23 @@ function redirectConnect() {
 function connection(e) {
     $.ajax({
         url: serverUrl + 'api/user/',
-        type: 'GET',
-        success: function (code, statut) {
-            window.location.href = 'menu.html';
-            console.log(code);
+        type: 'POST',
+        data: $(this).serialize(),
+        contentType: 'application/x-www-form-urlencoded',
+        success: function (code_html, statut) {
+            window.location.href = 'welcome.html';
+            setPseudo(code_html);
         },
         error: function (code_html, statut) {
             window.location.href = 'errorConnect.html';
         }
     });
     e.preventDefault();
+}
+
+function setPseudo(data)
+{
+    $('#pseudo_connect').empty().append(data);
 }
 
 function inscription(e) {
@@ -128,14 +135,10 @@ var app = {
     initialize: function () {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
+    
     onDeviceReady: function () {
         console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
-        // inscription
         $("#action_add").bind("submit", inscription);
         // Redirection vers la page d'inscription
         $("#redirec_register").bind("click", redirecRegister);

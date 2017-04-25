@@ -85,8 +85,8 @@ function deleteUser(telephone, callback){
     })      
 }
 
-function checkUser(mdp,telephone,pseudo, callback){
-    var requete = `select pseudo from public.utilisateur where Telephone = ${telephone} and pseudo=${pseudo} and mdp=${mdp}`
+function checkUser(mdp,telephone,pseudo, callback) {
+    var requete = `select pseudo from public.utilisateur where Telephone = '${telephone}' and pseudo='${pseudo}' and mdp='${mdp}'`
     console.log(requete);
     
     db.none(requete, null)

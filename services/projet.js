@@ -34,9 +34,17 @@ function checkUser(req,res) {
     var mdp = req.body.mdp;
     var telephone = req.body.telephone;
     
-    db.checkUser(mdp,telephone,pseudo,function (data) {
-        res.status(200).send("ok");
-        res.pseudo = data;
+    console.log("PASSE dans checkUser");
+    db.checkUser(mdp,telephone,pseudo,function (error, data) {
+        console.log("OUI PASSE");
+        if (error == null) {
+            res.status(200).json({
+                pseudo : data.pseudo
+            })
+            console.log("OUI projet.js");
+        } else {
+            res.status(500).send("Erreur : " + error)
+        }
     })
 }
 

@@ -1,10 +1,11 @@
 
 // configuration de la connexion à la base de données
 var settings = {
-    host: 'localhost',
+    host: '127.0.0.1',
     port: 5432,
-    database: 'test',
-    user: 'francis'
+    database: 'hourlies',
+    user: 'postgres',
+    password: 'postgres'
 };
 
 module.exports = {
