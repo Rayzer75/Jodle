@@ -28,7 +28,7 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
+        <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;"-->
         <meta name="format-detection" content="telephone=no">
         <meta name="msapplication-tap-highlight" content="no">
         <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
@@ -38,23 +38,25 @@
         <title>Jodle</title>
     </head>
     <body>
-        <form id="connect">
-            <input name="telephone" type="text" placeholder="Téléphone">
-            <input name="pseudo" type="text" placeholder="Pseudo">
-            <input name="mdp" type="password" placeholder="Mot de passe">
-            <button type="submit" class="btn btn-positive btn-block">Se connecter</button>
-        </form>
-        <br/>
-    <center>Si vous n'avez pas encore de compte</center>
-    <br/>
-    <a id="redirec_register">
-        <button class="btn btn-positive btn-block">Créer un compte</button>
-    </a>
-    <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
-    <script type="text/javascript" src="js/ratchet.js"></script>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/socket.io.js"></script>
-    <script type="text/javascript" src="js/mustache.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
-</body>
+        <div id="content">
+            <form id="connect">
+                <input name="telephone" type="text" placeholder="Téléphone">
+                <input name="pseudo" type="text" placeholder="Pseudo">
+                <input name="mdp" type="password" placeholder="Mot de passe">
+                <button type="submit" class="btn btn-positive btn-block">Se connecter</button>
+            </form>
+            <br/>
+            <center>Si vous n'avez pas encore de compte</center>
+            <br/>
+            <a id="redirec_register">
+                <button class="btn btn-positive btn-block">Créer un compte</button>
+            </a>
+        </div>
+        <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
+        <script type="text/javascript" src="js/ratchet.js"></script>
+        <script type="text/javascript" src="js/socket.io.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script type="text/javascript" src="js/mustache.js"></script>
+        <script type="text/javascript" src="js/index.js"></script>
+    </body>
 </html>
