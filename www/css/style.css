@@ -42,3 +42,9 @@
   background-color: #f2dede;
   border-color: #ebccd1;
 }
+
+#messages {
+    height: 500px;
+    overflow: hidden;
+    overflow-y: scroll;
+}

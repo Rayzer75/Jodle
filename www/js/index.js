@@ -18,6 +18,9 @@
  */
 
 var serverUrl = 'http://192.168.0.12:8080/';
+var storage = window.localStorage;
+var lastKey = storage.length;
+
 
 function redirectConnect() {
     window.location.href = 'index.html';
@@ -27,15 +30,17 @@ function connection(e) {s
     $.ajax({
         url: serverUrl + 'api/user/' + $('#telephone').val() + '/' + $('#pseudo').val() + '/' + $('#mdp').val(),
         type: 'GET',
-        //data: $(this).serialize(),
-        datatype: 'json',
-        //contentType: 'application/x-www-form-urlencoded',
-        success: function (code_html, statut) {
-            window.location.href = 'welcome.html';
-            setPseudo(code_html);
+        data: $(this).serialize(),
+        contentType: 'application/x-www-form-urlencoded',
+        success: function (code, statut) {
+            //window.location.href = 'menu.html';
+            $('#content').empty().html(code);
         },
         error: function (code_html, statut) {
-            window.location.href = 'errorConnect.html';
+            console.log(code_html);
+            console.log(statut)
+            //window.location.href = 'errorConnect.html';
+            $('#content').empty().html(code_html);
         }
     });
     e.preventDefault();
@@ -78,25 +83,35 @@ function redirecRegister() {
 function enableChat() {
     var socket = io.connect(serverUrl);
     $('#chat').submit(function () {
-        socket.emit('chat message', $('#m').val()); // TODO : concatener le pseudo
+        socket.emit('chat message', $('#myPseudo').text() + ' : ' + $('#m').val()); // TODO : concatener le pseudo
         $('#m').val('');
         return false;
     });
     socket.on('chat message', function (msg) {
-        $('#messages').append($('<li class="table-view-cell">').text(msg));
-        console.log("append");
-        window.scrollTo(0, document.body.scrollHeight);
+        var message = $('<li class="table-view-cell">').text(msg);
+        $('#messages').append(message);
+        lastKey++;
+        storage.setItem(lastKey, msg);
+        $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
     });
 }
 
+function getPreviousMessages() {
+    for (var i = 1; i <= lastKey; i++) {
+        $('#messages').append($('<li class="table-view-cell">').text(storage.getItem(i)));
+    }
+}
 
- $("document").ready(function () {
- enableChat();
- $("#action_add").bind("submit", inscription);
- $("#redirec_register").bind("click", redirecRegister);
- $("#contacts_list").bind("click", onSuccessContactsList);
- $("#connect").bind("submit", connection);
- });
+/*
+$("document").ready(function () {
+    getPreviousMessages();
+    enableChat();
+    $("#action_add").bind("submit", inscription);
+    $("#redirec_register").bind("click", redirecRegister);
+    $("#contacts_list").bind("click", onSuccessContactsList);
+    $("#connect").bind("submit", connection);
+});
+*/
 
 
 function onSuccessContactsList(contacts) {
@@ -107,16 +122,16 @@ function onSuccessContactsList(contacts) {
 //	}
     // TODO : requete AJAX
     //window.location.href = 'contact.html';
-    $.get(serverUrl + 'api/contacts/', function(data) {
-       $('#content').empty().html(data); 
+    $.get(serverUrl + 'api/contacts/', function (data) {
+        $('#content').empty().html(data);
     });
     for (var i = 0; i < contacts.length; i++) {
         var phoneNumber = '\'' + phoneNumberParser(contacts[i].phoneNumbers[0].value) + '\'';
         console.log(phoneNumber);
-        $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function(data) {
+        $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
             $('#contacts-dispo').after(data);
         });
-        
+
     }
 }
 
@@ -161,7 +176,8 @@ var app = {
         // Retourner a la page de connexion apres creation de compte
         $("#redirect_regis").bind("click", redirectConnect);
         $("#contacts_list").bind("click", getContactsList);
-        enableChat();
+        //getPreviousMessages();
+        //enableChat();
     }
 
 };

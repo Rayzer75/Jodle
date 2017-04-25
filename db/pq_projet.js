@@ -85,17 +85,19 @@ function deleteUser(telephone, callback){
     })      
 }
 
-function checkUser(mdp,telephone,pseudo, callback) {
-    var requete = `select from public.utilisateur where Telephone = '${telephone}' and pseudo='${pseudo}' and mdp='${mdp}'`
+
+function checkUser(mdp, telephone, pseudo, callback) {
+    var requete = `select pseudo from public.utilisateur where Telephone = ${telephone} and pseudo=${pseudo} and mdp=${mdp}`
+
     console.log(requete);
-    
-    db.none(requete, null)
-            .then(function (data)  {
-                callback(null, data)
-    })
-            .catch(function(error)  {
-                callback(error, null)
-    })      
+
+    db.one(requete, null)
+            .then(function (data) {
+                callback(null,data)
+            })
+            .catch(function (error) {
+                callback(error,null)
+            })
 }
 
 module.exports = {
