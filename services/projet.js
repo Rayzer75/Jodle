@@ -2,11 +2,11 @@ var db = require('../db/pq_projet.js')
 
 function listContacts(req, res) { 
     
-    db.getContact(telephone,function(error,data)
+    db.getContact(req.params.id,function(error,data)
      {
          if (error == null)
          {
-             res.status(200).render('contacts', {available_contacts : data});
+             res.status(200).render('contact', {contact : data});
              console.log(data);
          }
          else
@@ -48,8 +48,13 @@ function checkUser(req,res) {
     })
 }
 
+function showContacts(req, res) {
+    res.status(200).render('contacts');
+}
+
 module.exports = {
     listContacts,
     addUser,
-    checkUser
+    checkUser,
+    showContacts
 }

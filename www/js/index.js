@@ -93,6 +93,7 @@ function enableChat() {
  enableChat();
  $("#action_add").bind("submit", inscription);
  $("#redirec_register").bind("click", redirecRegister);
+ $("#contacts_list").bind("click", onSuccessContactsList);
  });
  */
 
@@ -103,8 +104,17 @@ function onSuccessContactsList(contacts) {
 //				"\n Telephone = " + contacts[i].phoneNumbers[0].value);
 //	}
     // TODO : requete AJAX
+    //window.location.href = 'contact.html';
+    $.get(serverUrl + 'api/contacts/', function(data) {
+       $('#content').empty().html(data); 
+    });
     for (var i = 0; i < contacts.length; i++) {
-        console.log('tel = ' + phoneNumberParser(contacts[i].phoneNumbers[0].value))
+        var phoneNumber = '\'' + phoneNumberParser(contacts[i].phoneNumbers[0].value) + '\'';
+        console.log(phoneNumber);
+        $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function(data) {
+            $('#contacts-dispo').after(data);
+        });
+        
     }
 }
 
@@ -148,7 +158,7 @@ var app = {
         $("#connect_page").bind("click", redirectConnect);
         // Retourner a la page de connexion apres creation de compte
         $("#redirect_regis").bind("click", redirectConnect);
-        getContactsList();
+        $("#contacts_list").bind("click", getContactsList);
         enableChat();
     }
 

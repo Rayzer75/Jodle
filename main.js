@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({     // pour gérer les URL-encoded bodies (envoi
   extended: true
 })); 
 
-app.set('views', path.join( 'public/views'));
+app.set('views', path.join(__dirname + '/www/views'));
 app.use(bodyParser.json()) // permet de lire le json envoyé en POST depuis le client
 app.engine('mustache', mustacheExpress());
 app.set('view engine', 'mustache');

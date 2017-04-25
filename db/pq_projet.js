@@ -7,7 +7,7 @@ var db = pgp(dbconfig)
 
 function getContact(telephone, callback)
 {
-    var requete = `select telephone, nom, prenom, position from public.utilisateur where telephone = ${telephone}`
+    var requete = `select pseudo, telephone, nom, prenom, position from public.utilisateur where telephone = ${telephone}`
     console.log(requete);
     
     db.one(requete, null)
