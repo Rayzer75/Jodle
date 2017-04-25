@@ -16,66 +16,69 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
+var serverUrl = 'http://192.168.0.10:8080/';
+
 function redirectConnect() {
     window.location.href = 'index.html';
 }
 
 function connection(e) {
     $.ajax({
-       url : 'http://129.88.241.142:8080/api/user/',
-       type : 'GET',
-       success : function(code,statut){
-           window.location.href = 'menu.html';
-           console.log(code);
-       },
-       error : function(code_html,statut){
-           window.location.href = 'errorConnect.html';
-       }
+        url: serverUrl + 'api/user/',
+        type: 'GET',
+        success: function (code, statut) {
+            window.location.href = 'menu.html';
+            console.log(code);
+        },
+        error: function (code_html, statut) {
+            window.location.href = 'errorConnect.html';
+        }
     });
     e.preventDefault();
 }
 
 function inscription(e) {
-	$.ajax({
-       url : 'http://129.88.241.142:8080/api/user/',
-       type : 'POST',
-       data : $(this).serialize(),
-       contentType : 'application/x-www-form-urlencoded',
-       success : function(code_html,statut){
-           window.location.href = 'registerVal.html';
-       },
-       error : function(code_html,statut){
-           window.location.href = 'errorPseudo.html';
-       }
+    $.ajax({
+        url: serverUrl + 'api/user/',
+        type: 'POST',
+        data: $(this).serialize(),
+        contentType: 'application/x-www-form-urlencoded',
+        success: function (code_html, statut) {
+            window.location.href = 'registerVal.html';
+        },
+        error: function (code_html, statut) {
+            window.location.href = 'errorPseudo.html';
+        }
     });
     e.preventDefault();
 }
 
 function getContactsList() {
-	var options = new ContactFindOptions();
-	options.filter = "";
-	options.multiple = true;
-	options.hasPhoneNumber = true;
-	filter = ["name", "phoneNumbers"];
-	navigator.contacts.find(filter, onSuccessContactsList, onErrorContactsList, options);
+    var options = new ContactFindOptions();
+    options.filter = "";
+    options.multiple = true;
+    options.hasPhoneNumber = true;
+    filter = ["name", "phoneNumbers"];
+    navigator.contacts.find(filter, onSuccessContactsList, onErrorContactsList, options);
 }
 
 function redirecRegister() {
-	window.location.href = 'register.html';
+    window.location.href = 'register.html';
 }
 
 function enableChat() {
-	var socket = io.connect('http://129.88.242.138:8080');
-	$('#chat').submit(function () {
-		socket.emit('chat message', $('#m').val()); // TODO : concatener le pseudo
-		$('#m').val('');
-		return false;
-	});
-	socket.on('chat message', function (msg) {
-		$('#messages').append($('<li class="table-view-cell">').text(msg));
-		console.log("append");
-		window.scrollTo(0, document.body.scrollHeight);
-	});
+    var socket = io.connect(serverUrl);
+    $('#chat').submit(function () {
+        socket.emit('chat message', $('#m').val()); // TODO : concatener le pseudo
+        $('#m').val('');
+        return false;
+    });
+    socket.on('chat message', function (msg) {
+        $('#messages').append($('<li class="table-view-cell">').text(msg));
+        console.log("append");
+        window.scrollTo(0, document.body.scrollHeight);
+    });
 }
 
 /*
@@ -92,24 +95,44 @@ function onSuccessContactsList(contacts) {
 //				"\n Prenom = " + contacts[i].name.givenName +
 //				"\n Telephone = " + contacts[i].phoneNumbers[0].value);
 //	}
-	// TODO : requete AJAX
+    // TODO : requete AJAX
+    for (var i = 0; i < contacts.length; i++) {
+        console.log('tel = ' + phoneNumberParser(contacts[i].phoneNumbers[0].value))
+    }
+}
+
+// permet d'éliminer le formattage américain des numéros de tel
+function phoneNumberParser(originalPhoneNumber) {
+    var phoneNumber = '';
+    // supresssion des espaces
+    var tmp = originalPhoneNumber.split(' ');
+    for (var i = 0; i < tmp.length; i++) {
+        phoneNumber += tmp[i];
+    }
+    // suppression des '-'
+    tmp = phoneNumber.split('-');
+    phoneNumber = '';
+    for (var i = 0; i < tmp.length; i++) {
+        phoneNumber += tmp[i];
+    }
+    return phoneNumber;
 }
 
 // onError: Failed to get the contacts
 function onErrorContactsList(contactError) {
-	alert('onError!');
+    alert('onError!');
 }
 
 var app = {
-	// Application Constructor
-	initialize: function () {
-		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-	},
-	// deviceready Event Handler
-	//
-	// Bind any cordova events here. Common events are:
-	// 'pause', 'resume', etc.
-	onDeviceReady: function () {
+    // Application Constructor
+    initialize: function () {
+        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+    },
+    // deviceready Event Handler
+    //
+    // Bind any cordova events here. Common events are:
+    // 'pause', 'resume', etc.
+    onDeviceReady: function () {
         console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
         // inscription
@@ -117,12 +140,12 @@ var app = {
         // Redirection vers la page d'inscription
         $("#redirec_register").bind("click", redirecRegister);
         //Bouton connexion
-        $("#connect").bind("submit",connection);
+        $("#connect").bind("submit", connection);
         // Rediriger vers la page de connexion
         $("#connect_page").bind("click", redirectConnect);
         // Retourner a la page de connexion apres creation de compte
         $("#redirect_regis").bind("click", redirectConnect);
-        
+        getContactsList();
         enableChat();
     }
 
