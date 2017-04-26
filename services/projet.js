@@ -36,7 +36,6 @@ function checkUser(req, res) {
     db.checkUser(mdp, telephone, pseudo, function (error, data) {
         if (error == null)
         {
-            //res.status(200).send({success: 'ok', data: data});
             console.log(data);
             res.render('menu', {pseudo: data});     
         } else

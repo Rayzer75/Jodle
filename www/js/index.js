@@ -38,9 +38,12 @@ function connection(e) {
             $('#content').empty().html(code);
             // Retourne la page des paramètres
             $("#param").bind("click", showParam);
+            $("#connect_page").bind("click", redirectConnect);
         },
         error: function (code, statut) {
+            //window.location.href = 'errorConnect.html';
             $('#content').empty().html(code);
+            $("#connect_page").bind("click", redirectConnect);
         }
     });
     e.preventDefault();
@@ -113,6 +116,7 @@ $("document").ready(function () {
     $("#contacts_list").bind("click", getContactsList);
     $("#delete").bind("click",delete_account);
     $("#deconnecter").bind("click",redirectConnect);
+    $("#redirect_regis").bind("click", redirectConnect);
 });
 
 
@@ -213,6 +217,7 @@ function showParam(){
         },
         error: function(code, statut) {
             console.log(code);
+            
         }
     });
 }
