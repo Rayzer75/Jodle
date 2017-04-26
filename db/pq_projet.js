@@ -59,8 +59,8 @@ function addUser(telephone, pseudo, mdp, nom, prenom, position, callback){
     })      
 }
     
-function updateUser(telephone, pseudo,mdp, nom, prenom, position, callback){
-    var requete = `update public.utilisateur set  nom = ${nom}, prenom = ${prenom}, pseudo = ${pseudo}, mdp = ${mdp}, position = ${position} where Telephone = ${telephone}`
+function updateUser(ancien_telephone, nouv_telephone, pseudo, mdp, callback){
+    var requete = `update public.utilisateur set pseudo = '${pseudo}', mdp = '${mdp}', telephone = '${nouv_telephone}' where Telephone = '${ancien_telephone}'`
     console.log(requete);
     
     db.none(requete, null)
@@ -73,7 +73,7 @@ function updateUser(telephone, pseudo,mdp, nom, prenom, position, callback){
 }
 
 function deleteUser(telephone, callback){
-    var requete = `delete from public.utilisateur where Telephone = ${telephone}`
+    var requete = `delete from public.utilisateur where Telephone = '${telephone}'`
     console.log(requete);
     
     db.none(requete, null)
@@ -87,7 +87,7 @@ function deleteUser(telephone, callback){
 
 
 function checkUser(mdp, telephone, pseudo, callback) {
-    var requete = `select pseudo from public.utilisateur where Telephone = ${telephone} and pseudo=${pseudo} and mdp=${mdp}`
+    var requete = `select pseudo from public.utilisateur where Telephone = '${telephone}' and pseudo='${pseudo}' and mdp='${mdp}'`
 
     console.log(requete);
 

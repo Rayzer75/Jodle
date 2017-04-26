@@ -29,16 +29,16 @@ function addUser(req, res) {
 }
 
 function checkUser(req, res) {
-    var pseudo = '\'' + req.query.pseudo + '\'';
-    var mdp = '\'' + req.query.mdp + '\'';
-    var telephone = '\'' + req.query.telephone + '\'';
+    var pseudo = req.query.pseudo;
+    var mdp = req.query.mdp;
+    var telephone = req.query.telephone;
 
     db.checkUser(mdp, telephone, pseudo, function (error, data) {
         if (error == null)
         {
             //res.status(200).send({success: 'ok', data: data});
             console.log(data);
-            res.render('menu', {pseudo: data});
+            res.render('menu', {pseudo: data});     
         } else
         {
             console.log(error);
@@ -55,10 +55,44 @@ function showParameters(req,res){
     res.status(200).render('parameters');
 }
 
+function deleteUser(req,res) {
+    var telephone = req.body.telephone;
+    db.deleteUser(telephone, function (error, data) {
+        if (error == null)
+        {
+            res.status(200).send('ok');
+            console.log(data);
+        } else
+        {
+            console.log(error);
+        }
+    })
+}
+
+function updateUser(req,res) {
+    var ancien_tel = req.body.ancien_tel;
+    var nouv_tel = req.body.telephone;
+    var pseudo = req.body.pseudo;
+    var mdp = req.body.mdp;
+    
+    db.updateUser(ancien_tel, nouv_tel, pseudo, mdp, function (error, data) {
+        if (error == null)
+        {
+            res.status(200).send('ok');
+            console.log(data);
+        } else
+        {
+            console.log(error);
+        }
+    })
+}
+
 module.exports = {
     listContacts,
     addUser,
     checkUser,
     showContacts,
-    showParameters
+    showParameters,
+    deleteUser,
+    updateUser
 }
