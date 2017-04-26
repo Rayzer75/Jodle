@@ -8,6 +8,16 @@ var mustacheExpress = require('mustache-express');
 var app_router = require('./routes/ctrl');
 var app_services = require('./services/projet')
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+
+app.use(allowCrossDomain);
+
 app.use(bodyParser.urlencoded({     // pour gérer les URL-encoded bodies (envoie formulaire en POST)
   extended: true
 })); 

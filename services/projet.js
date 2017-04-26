@@ -23,8 +23,8 @@ function addUser(req, res) {
     var prenom = req.body.prenom
     var tel = req.body.tel
 
-    db.addUser(tel, pseudo, mdp, nom, prenom, 1, function () {
-        res.status(200).send("ok");
+    db.addUser(tel, pseudo, mdp, nom, prenom, 1, function (error, data) {
+        res.status(200).send('ok');
     })
 }
 
@@ -38,13 +38,11 @@ function checkUser(req, res) {
         {
             //res.status(200).send({success: 'ok', data: data});
             console.log(data);
-            res.header("Access-Control-Allow-Origin", "*");
             res.render('menu', {pseudo: data});
         } else
         {
             console.log(error);
-            res.header("Access-Control-Allow-Origin", "*");
-            res.render('error', {error: error});
+            res.render('error_connect', {error: error});
         }
     })
 }
@@ -53,9 +51,14 @@ function showContacts(req, res) {
     res.status(200).render('contacts');
 }
 
+function showParameters(req,res){
+    res.status(200).render('parameters');
+}
+
 module.exports = {
     listContacts,
     addUser,
     checkUser,
-    showContacts
+    showContacts,
+    showParameters
 }

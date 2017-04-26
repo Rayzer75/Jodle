@@ -26,30 +26,23 @@ function redirectConnect() {
     window.location.href = 'index.html';
 }
 
-function connection(e) {s
+function connection(e) {
     $.ajax({
-        url: serverUrl + 'api/user/' + $('#telephone').val() + '/' + $('#pseudo').val() + '/' + $('#mdp').val(),
+        url: serverUrl + 'api/user/',
         type: 'GET',
         data: $(this).serialize(),
         contentType: 'application/x-www-form-urlencoded',
         success: function (code, statut) {
-            //window.location.href = 'menu.html';
             $('#content').empty().html(code);
+            $("#param").bind("click", showParam);
         },
-        error: function (code_html, statut) {
-            console.log(code_html);
-            console.log(statut)
-            //window.location.href = 'errorConnect.html';
-            $('#content').empty().html(code_html);
+        error: function (code, statut) {
+            $('#content').empty().html(code);
         }
     });
     e.preventDefault();
 }
 
-function setPseudo(data)
-{
-    $('#pseudo_connect').empty().append(data);
-}
 
 function inscription(e) {
     $.ajax({
@@ -57,10 +50,10 @@ function inscription(e) {
         type: 'POST',
         data: $(this).serialize(),
         contentType: 'application/x-www-form-urlencoded',
-        success: function (code_html, statut) {
+        success: function (code, statut) {
             window.location.href = 'registerVal.html';
         },
-        error: function (code_html, statut) {
+        error: function (code, statut) {
             window.location.href = 'errorPseudo.html';
         }
     });
@@ -102,7 +95,7 @@ function getPreviousMessages() {
     }
 }
 
-/*
+
 $("document").ready(function () {
     getPreviousMessages();
     enableChat();
@@ -110,8 +103,12 @@ $("document").ready(function () {
     $("#redirec_register").bind("click", redirecRegister);
     $("#contacts_list").bind("click", onSuccessContactsList);
     $("#connect").bind("submit", connection);
+    $("#connect_page").bind("click", redirectConnect);
+    $("#redirec_reg").bind("click", redirecRegister);
+    $("#redirect_con").bind("click", redirectConnect);
+    $("#param").bind("click", showParam);
+    $("#contacts_list").bind("click", getContactsList);
 });
-*/
 
 
 function onSuccessContactsList(contacts) {
@@ -157,6 +154,19 @@ function onErrorContactsList(contactError) {
     alert('onError!');
 }
 
+function showParam(){
+    $.ajax({
+        url: serverUrl + 'api/parameters/',
+        type: 'GET',
+        success: function (code, statut) {
+            $('#content').empty().html(code);
+        },
+        error: function(code, statut) {
+            console.log(code);
+        }
+    });
+}
+
 var app = {
     // Application Constructor
     initialize: function () {
@@ -169,15 +179,21 @@ var app = {
         $("#action_add").bind("submit", inscription);
         // Redirection vers la page d'inscription
         $("#redirec_register").bind("click", redirecRegister);
+        $("#redirec_reg").bind("click", redirecRegister);
         //Bouton connexion
         $("#connect").bind("submit", connection);
         // Rediriger vers la page de connexion
         $("#connect_page").bind("click", redirectConnect);
+        $("#redirect_con").bind("click", redirectConnect);
         // Retourner a la page de connexion apres creation de compte
         $("#redirect_regis").bind("click", redirectConnect);
         $("#contacts_list").bind("click", getContactsList);
         //getPreviousMessages();
         //enableChat();
+        // Retourner la page des paramètres
+        //$("#param").bind("click", showParam);
+        // Boutton de deconnexion
+        $("#deconnect").bind("click",redirectConnect);
     }
 
 };

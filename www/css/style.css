@@ -48,3 +48,13 @@
     overflow: hidden;
     overflow-y: scroll;
 }
+
+form {
+    padding: 8px;
+}
+
+.pad {
+    padding: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+}
