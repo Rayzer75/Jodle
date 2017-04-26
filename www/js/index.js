@@ -34,18 +34,16 @@ function connection(e) {
         data: $(this).serialize(),
         contentType: 'application/x-www-form-urlencoded',
         success: function (code, statut) {
-            //window.location.href = 'menu.html';
             $('#content').empty().html(code);
+            $("#param").bind("click", showParam);
         },
-        error: function (code_html, statut) {
-            console.log(code_html);
-            console.log(statut)
-            //window.location.href = 'errorConnect.html';
-            $('#content').empty().html(code_html);
+        error: function (code, statut) {
+            $('#content').empty().html(code);
         }
     });
     e.preventDefault();
 }
+
 
 function inscription(e) {
     $.ajax({
@@ -53,10 +51,10 @@ function inscription(e) {
         type: 'POST',
         data: $(this).serialize(),
         contentType: 'application/x-www-form-urlencoded',
-        success: function (code_html, statut) {
+        success: function (code, statut) {
             window.location.href = 'registerVal.html';
         },
-        error: function (code_html, statut) {
+        error: function (code, statut) {
             window.location.href = 'errorPseudo.html';
         }
     });
@@ -170,6 +168,11 @@ $("document").ready(function () {
     $("#contacts_list").bind("click", onSuccessContactsList);
     $("#connect").bind("submit", connection);
 //    $("#inputFileToLoad").bind("change", encodeImageFileAsURL);
+    $("#connect_page").bind("click", redirectConnect);
+    $("#redirec_reg").bind("click", redirecRegister);
+    $("#redirect_con").bind("click", redirectConnect);
+    $("#param").bind("click", showParam);
+    $("#contacts_list").bind("click", getContactsList);
 });
 
 
@@ -216,6 +219,7 @@ function onErrorContactsList(contactError) {
     alert('onError!');
 }
 
+
 function encodeImageFileAsURL() {
     var filesSelected = document.getElementById("inputFileToLoad").files;
     if (filesSelected.length > 0) {
@@ -244,31 +248,47 @@ function encodeImageFileAsURL() {
     }
 }
 
+function showParam(){
+    $.ajax({
+        url: serverUrl + 'api/parameters/',
+        type: 'GET',
+        success: function (code, statut) {
+            $('#content').empty().html(code);
+        },
+        error: function(code, statut) {
+            console.log(code);
+        }
+    });
+
+}
+
 var app = {
     // Application Constructor
     initialize: function () {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
-    // deviceready Event Handler
-    //
-    // Bind any cordova events here. Common events are:
-    // 'pause', 'resume', etc.
+    
     onDeviceReady: function () {
         console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
-        // inscription
         $("#action_add").bind("submit", inscription);
         // Redirection vers la page d'inscription
         $("#redirec_register").bind("click", redirecRegister);
+        $("#redirec_reg").bind("click", redirecRegister);
         //Bouton connexion
         $("#connect").bind("submit", connection);
         // Rediriger vers la page de connexion
         $("#connect_page").bind("click", redirectConnect);
+        $("#redirect_con").bind("click", redirectConnect);
         // Retourner a la page de connexion apres creation de compte
         $("#redirect_regis").bind("click", redirectConnect);
         $("#contacts_list").bind("click", getContactsList);
         //getPreviousMessages();
         //enableChat();
+        // Retourner la page des paramètres
+        //$("#param").bind("click", showParam);
+        // Boutton de deconnexion
+        $("#deconnect").bind("click",redirectConnect);
     }
 
 };
