@@ -49,13 +49,18 @@
                 <h1 class="title"><span id="myPseudo">Moi</span> - Lui</h1>
             </header>
             <nav>
-            <ul id="messages" class="table-view">
-                <li class="table-view-cell"><strong>Moi : </strong>Coucou ! Tu vas bien ?</li>
-                <li class="table-view-cell message-dest"><strong>Lui : </strong>Très bien et toi ?</li>
-                <li class="table-view-cell"><strong>Moi : </strong>Ca va super !</li>
-            </ul>
+                <ul id="messages" class="table-view">
+                    <li class="table-view-cell"><strong>Moi : </strong>Coucou ! Tu vas bien ?</li>
+                    <li class="table-view-cell message-dest"><strong>Lui : </strong>Très bien et toi ?</li>
+                    <li class="table-view-cell"><strong>Moi : </strong>Ca va super !</li>
+                    <li class="table-view-cell"><div id="imgTest"></div></li>           
+                </ul>
             </nav>
             <form id="chat" action="">
+                <div class="myInput">
+                    <input id="inputFileToLoad" type="file"/>
+                    <span class="icon icon-share"></span>
+                </div>
                 <input id="m" autocomplete="off" />
                 <button>Envoyer</button>
             </form>
