@@ -12,5 +12,7 @@ router.post('/user/', service.addUser);
 router.delete('/user/', service.deleteUser);
 router.get('/contacts/', service.showContacts);
 router.get('/parameters/',service.showParameters);
+router.get('/profil/',service.showProfil);
+router.get('/menu/',service.showIndex);
 module.exports = router
 

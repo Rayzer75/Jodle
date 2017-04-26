@@ -100,6 +100,20 @@ function checkUser(mdp, telephone, pseudo, callback) {
             })
 }
 
+function showProfil(telephone, callback) {
+    var requete = `select pseudo,nom,prenom,telephone from public.utilisateur where Telephone = '${telephone}'`
+    
+    console.log(requete);
+    
+    db.one(requete, null)
+            .then(function (data) {
+                callback(null,data)
+            })
+            .catch(function (error) {
+                callback(error,null)
+            })
+}
+
 module.exports = {
   getContact,
   getPosition,
@@ -107,5 +121,6 @@ module.exports = {
   updateUser,
   addUser,
   deleteUser,
-  checkUser
+  checkUser,
+  showProfil
 };

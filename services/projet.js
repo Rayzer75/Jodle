@@ -86,6 +86,25 @@ function updateUser(req,res) {
     })
 }
 
+function showProfil(req,res) {
+    var telephone = req.query.telephone;
+    
+    db.showProfil(telephone, function(error, data) {
+        if (error == null)
+        {
+            console.log(data);
+            res.render('profil', {pseudo: data, nom: data, prenom: data, telephone: data}); 
+        } else
+        {
+            console.log(error);
+        }
+    })
+}
+
+function showIndex(req,res) {
+    res.status(200).render('menu');
+}
+
 module.exports = {
     listContacts,
     addUser,
@@ -93,5 +112,7 @@ module.exports = {
     showContacts,
     showParameters,
     deleteUser,
-    updateUser
+    updateUser,
+    showProfil,
+    showIndex
 }

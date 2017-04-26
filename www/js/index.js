@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var serverUrl = 'http://192.168.0.10:8080/';
+var serverUrl = 'http://192.168.0.12:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
@@ -37,12 +37,11 @@ function connection(e) {
         contentType: 'application/x-www-form-urlencoded',
         success: function (code, statut) {
             $('#content').empty().html(code);
-            // Retourne la page des paramètres
-            $("#param").bind("click", showParam);
             $("#connect_page").bind("click", redirectConnect);
+            // contient les boutons du menu
+            bindButton();
         },
         error: function (code, statut) {
-            //window.location.href = 'errorConnect.html';
             $('#content').empty().html(code);
             $("#connect_page").bind("click", redirectConnect);
         }
@@ -182,6 +181,7 @@ $("document").ready(function () {
     $("#delete").bind("click",delete_account);
     $("#deconnecter").bind("click",redirectConnect);
     $("#redirect_regis").bind("click", redirectConnect);
+    $("#profil").bind("click", showProfil);
 });
 
 
@@ -234,7 +234,7 @@ function delete_account(e){
         url: serverUrl + 'api/user/',
         type: 'DELETE',
         data : {
-            "telephone": telephoneGlob,
+            "telephone": telephoneGlob
         },
         success: function (code, statut) {
             // TODO : Faire une page de validation de suppression
@@ -255,7 +255,7 @@ function update_account(e) {
             "ancien_tel": telephoneGlob,
             "telephone": e.target.telephone.value,
             "pseudo": e.target.pseudo.value,
-            "mdp": e.target.mdp.value,
+            "mdp": e.target.mdp.value
         },
         success: function (code, statut) {
             // TODO : Faire une page de validation de mise à jour
@@ -303,12 +303,13 @@ function showParam(){
         type: 'GET',
         success: function (code, statut) {
             $('#content').empty().html(code);
-            // Boutton de deconnexion
+            // Bouton de deconnexion
             $("#deconnecter").bind("click",redirectConnect);
             // Supprimer Compter
             $("#delete").bind("click",delete_account);
             // Mettre à jour le compte
             $("#update").bind("submit",update_account);
+            bindButton();
         },
         error: function(code, statut) {
             console.log(code);
@@ -316,6 +317,46 @@ function showParam(){
         }
     });
 
+}
+
+function showIndex(){
+    $.ajax({
+        url: serverUrl + 'api/menu/',
+        type: 'GET',
+        success: function (code, statut) {
+            $('#content').empty().html(code);
+            bindButton();
+        },
+        error: function(code, statut) {
+            console.log(code);
+        }
+    });
+}
+
+function showProfil() {
+    $.ajax({
+        url: serverUrl + 'api/profil/',
+        type: 'GET',
+        data: {
+            "telephone": telephoneGlob
+        },
+        success: function (code, statut) {
+            $('#content').empty().html(code);
+            bindButton();
+        },
+        error: function(code, statut) {
+            console.log(code);
+        }
+    });
+}
+
+// Avoir les boutons du menu fonctionnel (A appeler)
+function bindButton() {
+    $("#param").bind("click", showParam);
+    $("#accueil").bind("click", showIndex);
+    $("#profil").bind("click", showProfil);
+    // TODO
+    //$("#list_contact").bind("click", );
 }
 
 var app = {
