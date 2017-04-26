@@ -19,7 +19,9 @@
 
 var serverUrl = 'http://192.168.0.10:8080/';
 var storage = window.localStorage;
+//storage.clear();
 var lastKey = storage.length;
+
 
 function redirectConnect() {
     window.location.href = 'index.html';
@@ -76,27 +78,90 @@ function redirecRegister() {
 
 function enableChat() {
     var socket = io.connect(serverUrl);
+    $('#inputFileToLoad').change(function () {
+        var filesSelected = document.getElementById("inputFileToLoad").files;
+        if (filesSelected.length > 0) {
+            var fileToLoad = filesSelected[0];
+            var fileReader = new FileReader();
+            fileReader.onload = function (fileLoadedEvent) {
+                var srcData = fileLoadedEvent.target.result; // <--- data: base64
+                var typeMedia;
+                switch (fileToLoad.type.split('/')[0]) {
+                    case 'image':
+                        typeMedia = 'image';
+                        break;
+                    case 'audio':
+                        typeMedia = 'audio';
+                        break;
+                    case 'video':
+                        typeMedia = 'video';
+                        break;
+                    default:
+                        alert("Fichier non pris en charge !");
+                        break;
+                }
+                socket.emit('chat message', {sender: $('#myPseudo').text(),
+                    type: typeMedia,
+                    data: srcData
+                }
+                );
+            };
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    });
     $('#chat').submit(function () {
-        socket.emit('chat message', $('#myPseudo').text() + ' : ' + $('#m').val()); // TODO : concatener le pseudo
+        socket.emit('chat message', {sender: $('#myPseudo').text(), type: 'text', data: $('#m').val()});
         $('#m').val('');
         return false;
     });
     socket.on('chat message', function (msg) {
-        var message = $('<li class="table-view-cell">').text(msg);
-        $('#messages').append(message);
+        var message = buildMessage(msg.sender, msg.type, msg.data);
         lastKey++;
-        storage.setItem(lastKey, msg);
+        storage.setItem(lastKey, msg.sender + '-' + msg.type + '-' + msg.data);
+        $('#messages').append(message);
         $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
     });
 }
 
 function getPreviousMessages() {
     for (var i = 1; i <= lastKey; i++) {
-        $('#messages').append($('<li class="table-view-cell">').text(storage.getItem(i)));
+        var array = storage.getItem(i).split('-');
+        var sender = array[0];
+        var type = array[1];
+        var data = array[2];
+        $('#messages').append(buildMessage(sender, type, data));
     }
 }
 
-/*
+function buildMessage(sender, type, data) {
+    var message = $('<li class="table-view-cell">').text(sender + ' : ');
+    var media;
+    switch (type) {
+        case 'text':
+            message.text(sender + ' : ' + data);
+            break;
+        case 'image':
+            media = document.createElement('img');
+            media.src = data;
+            message.append(media);
+            break;
+        case 'audio':
+            media = document.createElement('audio');
+            media.src = data;
+            media.controls = 'controls';
+            message.append(media);
+            break;
+        case 'video':
+            media = document.createElement('video');
+            media.src = data;
+            media.controls = 'video';
+            message.append(media);
+            break;
+    }
+    return message;
+}
+
+
 $("document").ready(function () {
     getPreviousMessages();
     enableChat();
@@ -104,8 +169,9 @@ $("document").ready(function () {
     $("#redirec_register").bind("click", redirecRegister);
     $("#contacts_list").bind("click", onSuccessContactsList);
     $("#connect").bind("submit", connection);
+//    $("#inputFileToLoad").bind("change", encodeImageFileAsURL);
 });
-*/
+
 
 function onSuccessContactsList(contacts) {
 //	for (var i = 0; i < contacts.length; i++) {
@@ -148,6 +214,34 @@ function phoneNumberParser(originalPhoneNumber) {
 // onError: Failed to get the contacts
 function onErrorContactsList(contactError) {
     alert('onError!');
+}
+
+function encodeImageFileAsURL() {
+    var filesSelected = document.getElementById("inputFileToLoad").files;
+    if (filesSelected.length > 0) {
+        var fileToLoad = filesSelected[0];
+        console.log(fileToLoad.type.split('/')[0]);
+        var fileReader = new FileReader();
+
+        fileReader.onload = function (fileLoadedEvent) {
+            var srcData = fileLoadedEvent.target.result; // <--- data: base64
+
+//        var newImage = document.createElement('img');
+//        newImage.src = srcData;
+            var newSound = document.createElement('audio');
+            newSound.src = srcData;
+            newSound.controls = 'controls';
+//            var newVideo = document.createElement('video');
+//            newVideo.src = srcData;
+//            newVideo.controls = 'controls';
+
+//        document.getElementById("imgTest").innerHTML = newImage.outerHTML;
+            document.getElementById("imgTest").innerHTML = newSound.outerHTML;
+//            document.getElementById("imgTest").innerHTML = newVideo.outerHTML;
+            console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
+        };
+        fileReader.readAsDataURL(fileToLoad);
+    }
 }
 
 var app = {

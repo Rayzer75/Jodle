@@ -3,44 +3,61 @@
 }
 
 #chat { 
-	background: #ccc;
-	padding: 3px;
-	position: fixed;
-	bottom: 0;
-	width: 100%; 
+    background: #ccc;
+    padding: 3px;
+    position: fixed;
+    bottom: 0;
+    width: 100%; 
 }
 
-#chat input { 
-	border: 0; 
-	padding: 10px; 
-	width: 80%; 
-	margin-right: .5%; 
+.myInput {
+    position: relative;
+    border: 2px solid #AAA;
+    border-radius: 4px;
+    padding: 2px 5px;
+    margin: 2px;
+    background: #DDD;
+    display: inline-block;
+}
+.myInput input {
+    position: absolute;
+    z-index: 2;
+    opacity: 0;
+    width: 40px;
+    height:100%;
+}
+
+#m { 
+    border: 0; 
+    padding: 10px; 
+    width: 75%; 
+    margin-right: .5%; 
 }
 
 #chat button {
-	text-align: center;
-	cursor: pointer;
-	border-radius: 3px;
-	width: 18%; 
-	background: #5cb85c;
-	border: none; 
-	padding: 10px; 
+    text-align: center;
+    cursor: pointer;
+    border-radius: 3px;
+    width: 18%; 
+    background: #5cb85c;
+    border: none; 
+    padding: 10px; 
 }
 
 .message-dest {
-	background: #eee;
+    background: #eee;
 }
 
 .sucess {
-	color: #3c763d;
-	background-color: #dff0d8;
-	border-color: #d6e9c6;
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
 }
 
 .danger {
-  color: #a94442;
-  background-color: #f2dede;
-  border-color: #ebccd1;
+    color: #a94442;
+    background-color: #f2dede;
+    border-color: #ebccd1;
 }
 
 #messages {
