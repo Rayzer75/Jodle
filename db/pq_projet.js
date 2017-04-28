@@ -7,7 +7,7 @@ var db = pgp(dbconfig)
 
 function getContact(telephone, callback)
 {
-    var requete = `select pseudo, telephone, nom, prenom, position from public.utilisateur where telephone = ${telephone}`
+    var requete = `select pseudo, telephone, nom, prenom from public.utilisateur where telephone = ${telephone}`
     console.log(requete);
     
     db.one(requete, null)
@@ -20,7 +20,7 @@ function getContact(telephone, callback)
 }
 
 function getPosition(telephone, callback){
-     var requete = `select position from public.utilisateur where telephone = ${telephone}`
+     var requete = `select latitude, longitude from public.utilisateur where telephone = ${telephone}`
     console.log(requete);
     
     db.one(requete, null)
@@ -46,8 +46,8 @@ function getMedia(id, type, callback){
 }
 
 
-function addUser(telephone, pseudo, mdp, nom, prenom, position, callback){
-    var requete = `insert into public.utilisateur values('${pseudo}','${mdp}','${telephone}', '${nom}','${prenom}', '${position}')`
+function addUser(telephone, pseudo, mdp, nom, prenom, callback){
+    var requete = `insert into public.utilisateur values('${pseudo}','${mdp}','${telephone}', '${nom}','${prenom}')`
     console.log(requete);
     
     db.none(requete, null)
@@ -114,6 +114,20 @@ function showProfil(telephone, callback) {
             })
 }
 
+function updatePosition(latitude, longitude, telephone, callback) {
+    var requete = `update public.utilisateur set latitude = '${latitude}', longitude = '${longitude}' where telephone = '${telephone}'`
+    
+    console.log(requete);
+    
+    db.none(requete, null)
+        .then(function (data) {
+            callback(null,data)
+        })
+        .catch(function (error) {
+            callback(error,null)
+        })
+}
+
 module.exports = {
   getContact,
   getPosition,
@@ -122,5 +136,6 @@ module.exports = {
   addUser,
   deleteUser,
   checkUser,
-  showProfil
+  showProfil,
+  updatePosition
 };

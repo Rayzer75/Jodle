@@ -23,7 +23,7 @@ function addUser(req, res) {
     var prenom = req.body.prenom
     var tel = req.body.tel
 
-    db.addUser(tel, pseudo, mdp, nom, prenom, 1, function (error, data) {
+    db.addUser(tel, pseudo, mdp, nom, prenom, function (error, data) {
         res.status(200).send('ok');
     })
 }
@@ -105,6 +105,24 @@ function showIndex(req,res) {
     res.status(200).render('menu');
 }
 
+function updatePosition(req,res) {
+    var telephone = req.body.telephoneG;
+    var latitude = req.body.latitudeG;
+    var longitude = req.body.longitudeG;
+    
+    db.updatePosition(latitude, longitude, telephone, function (error, data) {
+        if (error == null)
+        {
+            console.log("OUI");
+            res.status(200).send('ok');
+            console.log(data);
+        } else
+        {
+            console.log("ERROR");
+            console.log(error);
+        }
+    })
+}
 module.exports = {
     listContacts,
     addUser,
@@ -114,5 +132,6 @@ module.exports = {
     deleteUser,
     updateUser,
     showProfil,
-    showIndex
+    showIndex,
+    updatePosition
 }

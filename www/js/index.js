@@ -22,6 +22,8 @@ var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
 var telephoneGlob;
+var longitudeGlob;
+var latitudeGlob;
 
 function redirectConnect() {
     window.location.href = 'index.html';
@@ -40,6 +42,7 @@ function connection(e) {
             $("#connect_page").bind("click", redirectConnect);
             // contient les boutons du menu
             bindButton();
+            navigator.geolocation.getCurrentPosition(sendLocation,errorLocation,{timeout:10000});
         },
         error: function (code, statut) {
             $('#content').empty().html(code);
@@ -49,6 +52,48 @@ function connection(e) {
     e.preventDefault();
 }
 
+// https://www.dataiku.com/learn/guide/other/geo/convert-coordinates-with-PostGIS.html
+// http://www.postgis.org/docs/ST_Distance.html
+// Fonction pour obtenir la latitude et la longitude de la personne
+function sendLocation(position) {
+    latitudeGlob = position.coords.latitude;
+    longitudeGlob = position.coords.longitude;
+    
+    // Met a jour sa position à chaque connexion à l'application
+    updatePosition();
+    
+    console.log(latitudeGlob);
+    console.log(longitudeGlob);
+    console.log(`More or less ${position.coords.accuracy} meters.`);
+}
+
+function errorLocation() {
+    console.log("ERROR LOCATION");
+}
+
+function createPoint(longitude, latitude){
+    
+}
+
+function updatePosition() {
+    console.log(telephoneGlob);
+    console.log(longitudeGlob);
+    $.ajax({
+        url: serverUrl + 'api/user/pos/',
+        type: 'PUT',
+        data : {
+            "telephoneG": telephoneGlob,
+            "longitudeG": longitudeGlob,
+            "latitudeG": latitudeGlob
+        },
+        success: function (code, statut) {
+            console.log(code);
+        },
+        error: function (code, statut) {
+            console.log(code);
+        }
+    });
+}
 
 function inscription(e) {
     $.ajax({
@@ -247,7 +292,7 @@ function delete_account(e){
     e.preventDefault();
 }
 
-function update_account(e) {
+function update_account() {
     $.ajax({
         url: serverUrl + 'api/user/',
         type: 'PUT',
@@ -265,7 +310,6 @@ function update_account(e) {
             console.log(code);
         }
     });
-    e.preventDefault();
 }
 
 function encodeImageFileAsURL() {
