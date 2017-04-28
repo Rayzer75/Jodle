@@ -1,0 +1,25 @@
+{{#data}}
+<header class="bar bar-nav">
+    <a id="contacts_list">
+        <button class="btn btn-link btn-nav pull-left">
+            <span class="icon icon-left-nav"></span>
+            Contacts
+        </button>
+    </a>
+    <h1 class="title"><span id="myPseudo">{{ pseudo1 }}</span> - <span id="otherPseudo">{{ pseudo2 }}</span></h1>
+    <span id="dest">{{ tel1 }}</span>
+    <span id="emit">{{ tel2 }}</span>
+</header>
+<nav>
+    <ul id="messages" class="table-view">
+    </ul>
+</nav>
+<form id="chat" action="">
+    <div class="myInput">
+        <input id="inputFileToLoad" type="file"/>
+        <span class="icon icon-share"></span>
+    </div>
+    <input id="m" autocomplete="off" />
+    <button class="icon icon-play"></button>
+</form>
+{{/data}}

@@ -37,6 +37,9 @@ function checkUser(req, res) {
         if (error == null)
         {
             console.log(data);
+            var sess = req.session;
+            sess.pseudo = data.pseudo;
+            sess.telephone = telephone;
             res.render('menu', {pseudo: data});     
         } else
         {
@@ -173,6 +176,12 @@ function updatePosition(req,res) {
     })
 }
 
+function showChat(req,res) {
+    data = req.query.data;
+    console.log(data);
+    res.status(200).render('chat', {data: data});
+}
+
 module.exports = {
     listContacts,
     addUser,
@@ -188,5 +197,6 @@ module.exports = {
     updateUser,
     showProfil,
     showIndex,
-    updatePosition
+    updatePosition,
+    showChat
 }

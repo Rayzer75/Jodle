@@ -10,7 +10,7 @@ function getContact(telephone, callback)
     var requete = `select pseudo, telephone, nom, prenom from public.utilisateur where telephone = ${telephone}`
     console.log(requete);
     
-    db.one(requete, null)
+    db.oneOrNone(requete, null)
             .then(function (data)  {
                 callback(null, data)
     })
