@@ -6,6 +6,7 @@ var settings = {
     database: 'jodledb',
     user: 'postgres',
     password: 'postgres'
+
 };
 
 module.exports = {
