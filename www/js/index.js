@@ -21,6 +21,7 @@ var serverUrl = 'http://192.168.0.10:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
+var socket = io.connect(serverUrl);
 
 
 function redirectConnect() {
@@ -62,6 +63,7 @@ function inscription(e) {
 }
 
 function getContactsList() {
+    socket.disconnect();
     var options = new ContactFindOptions();
     options.filter = "";
     options.multiple = true;
@@ -75,7 +77,6 @@ function redirecRegister() {
 }
 
 function enableChat() {
-    var socket = io.connect(serverUrl);
     $('#inputFileToLoad').change(function () {
         var filesSelected = document.getElementById("inputFileToLoad").files;
         if (filesSelected.length > 0) {
@@ -100,7 +101,9 @@ function enableChat() {
                 }
                 socket.emit('chat message', {sender: $('#myPseudo').text(),
                     type: typeMedia,
-                    data: srcData
+                    data: srcData,
+                    emit: $('#emit').text(),
+                    dest: $('#dest').text()
                 }
                 );
             };
@@ -108,11 +111,30 @@ function enableChat() {
         }
     });
     $('#chat').submit(function () {
-        socket.emit('chat message', {sender: $('#myPseudo').text(), type: 'text', data: $('#m').val()});
+        socket.emit('chat message', {sender: $('#myPseudo').text(),
+            type: 'text',
+            data: $('#m').val(),
+            emit: $('#emit').text(),
+            dest: $('#dest').text()
+        });
         $('#m').val('');
         return false;
     });
     socket.on('chat message', function (msg) {
+        var message = buildMessage(msg.sender, msg.type, msg.data);
+        lastKey++;
+        storage.setItem(lastKey, msg.sender + '-' + msg.type + '-' + msg.data);
+        $('#messages').append(message);
+        $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
+    });
+    socket.on('server message', function (msg) {
+        var message = buildMessage(msg.sender, msg.type, msg.data);
+        $('#messages').append(message);
+        $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
+    });
+    // le destinataire a-t-il émis des messages ?
+    socket.emit('is connected', { emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text()});
+    socket.on('new message', function (msg) {
         var message = buildMessage(msg.sender, msg.type, msg.data);
         lastKey++;
         storage.setItem(lastKey, msg.sender + '-' + msg.type + '-' + msg.data);
@@ -141,6 +163,7 @@ function buildMessage(sender, type, data) {
         case 'image':
             media = document.createElement('img');
             media.src = data;
+            media.style.maxWidth = '100%';
             message.append(media);
             break;
         case 'audio':
@@ -153,6 +176,7 @@ function buildMessage(sender, type, data) {
             media = document.createElement('video');
             media.src = data;
             media.controls = 'video';
+            media.style.maxWidth = '100%';
             message.append(media);
             break;
     }
@@ -167,7 +191,6 @@ $("document").ready(function () {
     $("#redirec_register").bind("click", redirecRegister);
     $("#contacts_list").bind("click", onSuccessContactsList);
     $("#connect").bind("submit", connection);
-//    $("#inputFileToLoad").bind("change", encodeImageFileAsURL);
     $("#connect_page").bind("click", redirectConnect);
     $("#redirec_reg").bind("click", redirecRegister);
     $("#redirect_con").bind("click", redirectConnect);
@@ -219,43 +242,14 @@ function onErrorContactsList(contactError) {
     alert('onError!');
 }
 
-
-function encodeImageFileAsURL() {
-    var filesSelected = document.getElementById("inputFileToLoad").files;
-    if (filesSelected.length > 0) {
-        var fileToLoad = filesSelected[0];
-        console.log(fileToLoad.type.split('/')[0]);
-        var fileReader = new FileReader();
-
-        fileReader.onload = function (fileLoadedEvent) {
-            var srcData = fileLoadedEvent.target.result; // <--- data: base64
-
-//        var newImage = document.createElement('img');
-//        newImage.src = srcData;
-            var newSound = document.createElement('audio');
-            newSound.src = srcData;
-            newSound.controls = 'controls';
-//            var newVideo = document.createElement('video');
-//            newVideo.src = srcData;
-//            newVideo.controls = 'controls';
-
-//        document.getElementById("imgTest").innerHTML = newImage.outerHTML;
-            document.getElementById("imgTest").innerHTML = newSound.outerHTML;
-//            document.getElementById("imgTest").innerHTML = newVideo.outerHTML;
-            console.log("Converted Base64 version is " + document.getElementById("imgTest").innerHTML);
-        };
-        fileReader.readAsDataURL(fileToLoad);
-    }
-}
-
-function showParam(){
+function showParam() {
     $.ajax({
         url: serverUrl + 'api/parameters/',
         type: 'GET',
         success: function (code, statut) {
             $('#content').empty().html(code);
         },
-        error: function(code, statut) {
+        error: function (code, statut) {
             console.log(code);
         }
     });
@@ -267,7 +261,7 @@ var app = {
     initialize: function () {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
-    
+
     onDeviceReady: function () {
         console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
@@ -283,12 +277,12 @@ var app = {
         // Retourner a la page de connexion apres creation de compte
         $("#redirect_regis").bind("click", redirectConnect);
         $("#contacts_list").bind("click", getContactsList);
-        //getPreviousMessages();
-        //enableChat();
+        getPreviousMessages();
+        enableChat();
         // Retourner la page des paramètres
         //$("#param").bind("click", showParam);
         // Boutton de deconnexion
-        $("#deconnect").bind("click",redirectConnect);
+        $("#deconnect").bind("click", redirectConnect);
     }
 
 };

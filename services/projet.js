@@ -55,10 +55,70 @@ function showParameters(req,res){
     res.status(200).render('parameters');
 }
 
+Date.prototype.addDays = function(days) {
+  var date = new Date(this.valueOf());
+  date.setDate(date.getDate() + days);
+  return date;
+};
+
+function getTimeout() {
+    var timeout = 7; // 7 jours
+    var date = new Date();
+    date = date.addDays(timeout);
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
+    var day  = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
+    return year + ":" + month + ":" + day;
+}
+
+function addMedia(msg, timeout) {
+    db.addMedia(msg.type, msg.emit, msg.dest, msg.data, timeout, function (error, data) {
+        if (error) {
+            console.log(error);
+        }
+    });
+}
+
+function getAllMedias(idEmit, idDest, callback) {
+    db.getAllMedias(idEmit, idDest, function (error, data) {
+        if (error == null)
+        {
+            console.log(data);
+            callback(data);
+        } else
+        {
+            console.log(error);
+        }
+    });
+}
+
+function deleteAllMedias(idEmit, idDest) {
+    db.deleteAllMedias(idEmit, idDest, function (error, data) {
+        if (error == null)
+        {
+            console.log("Deleted medias");
+        } else
+        {
+            console.log(error);
+        }
+    });
+}
+
+function deleteExpiredMedias() {
+    db.deleteExpiredMedias();
+}
+
 module.exports = {
     listContacts,
     addUser,
     checkUser,
     showContacts,
-    showParameters
+    showParameters,
+    getTimeout,
+    addMedia,
+    getAllMedias,
+    deleteAllMedias,
+    deleteExpiredMedias
 }

@@ -100,6 +100,47 @@ function checkUser(mdp, telephone, pseudo, callback) {
             })
 }
 
+function addMedia(typeMedia, emit, dest, data, timeout, callback) {
+    var requete = `INSERT INTO public.media(typemedia, idemetteur, iddestinataire, data, timeout) VALUES('${typeMedia}', '${emit}', '${dest}', '${data}', to_date('${timeout}', 'YY:MM:DD'))`;
+    console.log(requete);
+    db.any(requete, null)
+            .then(function (data) {
+                callback(null,data);
+            })
+            .catch(function (error) {
+                callback(error,null);
+            });
+}
+
+function getAllMedias(emit, dest, callback) {
+    var requete = `SELECT typemedia, data FROM public.media WHERE timeout > CURRENT_DATE AND iddestinataire = '${dest}' AND idemetteur = '${emit}'`;
+    console.log(requete);
+    db.any(requete, null)
+            .then(function (data) {
+                callback(null,data);
+            })
+            .catch(function (error) {
+                callback(error,null);
+            });
+}
+
+function deleteAllMedias(emit, dest, callback) {
+    var requete = `DELETE FROM public.media WHERE timeout > CURRENT_DATE AND iddestinataire = '${dest}' AND idemetteur = '${emit}'`;
+    console.log(requete);
+    db.none(requete, null)
+            .then(function (data) {
+                callback(null,data);
+            })
+            .catch(function (error) {
+                callback(error,null);
+            });
+}
+
+function deleteExpiredMedias() {
+    var requete = `DELETE FROM public.media WHERE timeout < CURRENT_DATE`;
+    db.any(requete);
+}
+
 module.exports = {
   getContact,
   getPosition,
@@ -107,5 +148,9 @@ module.exports = {
   updateUser,
   addUser,
   deleteUser,
-  checkUser
+  checkUser,
+  addMedia,
+  getAllMedias,
+  deleteAllMedias,
+  deleteExpiredMedias
 };
