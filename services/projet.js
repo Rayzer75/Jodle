@@ -37,6 +37,9 @@ function checkUser(req, res) {
         if (error == null)
         {
             console.log(data);
+            var sess = req.session;
+            sess.pseudo = data.pseudo;
+            sess.telephone = telephone;
             res.render('menu', {pseudo: data});     
         } else
         {
@@ -210,6 +213,12 @@ function getDist(req,res) {
     })
 }
 
+function showChat(req,res) {
+    data = req.query.data;
+    console.log(data);
+    res.status(200).render('chat', {data: data});
+}
+
 module.exports = {
     listContacts,
     addUser,
@@ -227,5 +236,6 @@ module.exports = {
     showIndex,
     updatePosition,
     getPosition,
-    getDist
+    getDist,
+    showChat
 }

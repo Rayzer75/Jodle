@@ -15,5 +15,6 @@ router.get('/contacts/', service.showContacts);
 router.get('/parameters/',service.showParameters);
 router.get('/profil/',service.showProfil);
 router.get('/menu/',service.showIndex);
+router.get('/chat/',service.showChat);
 module.exports = router
 

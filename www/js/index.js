@@ -43,7 +43,8 @@ function connection(e) {
             $("#connect_page").bind("click", redirectConnect);
             // contient les boutons du menu
             bindButton();
-            navigator.geolocation.getCurrentPosition(sendLocation,errorLocation,{timeout:10000});
+            getContactsList();
+            navigator.geolocation.getCurrentPosition(sendLocation, errorLocation, {timeout: 10000});
         },
         error: function (code, statut) {
             $('#content').empty().html(code);
@@ -59,9 +60,10 @@ function connection(e) {
 function sendLocation(position) {
     latitudeGlob = position.coords.latitude;
     longitudeGlob = position.coords.longitude;
-    
+
     // Met a jour sa position à chaque connexion à l'application
     updatePosition();
+
 
     //console.log(latitudeGlob);
     //console.log(longitudeGlob);
@@ -78,7 +80,7 @@ function updatePosition() {
     $.ajax({
         url: serverUrl + 'api/user/pos/',
         type: 'PUT',
-        data : {
+        data: {
             "telephoneG": telephoneGlob,
             "longitudeG": longitudeGlob,
             "latitudeG": latitudeGlob
@@ -109,7 +111,6 @@ function inscription(e) {
 }
 
 function getContactsList() {
-    socket.disconnect();
     var options = new ContactFindOptions();
     options.filter = "";
     options.multiple = true;
@@ -179,7 +180,7 @@ function enableChat() {
         $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
     });
     // le destinataire a-t-il émis des messages ?
-    socket.emit('is connected', { emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text()});
+    socket.emit('is connected', {emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text()});
     socket.on('new message', function (msg) {
         var message = buildMessage(msg.sender, msg.type, msg.data);
         lastKey++;
@@ -230,24 +231,24 @@ function buildMessage(sender, type, data) {
 }
 
 
-$("document").ready(function () {
-    getPreviousMessages();
-    enableChat();
-    $("#action_add").bind("submit", inscription);
-    $("#redirec_register").bind("click", redirecRegister);
-    $("#contacts_list").bind("click", onSuccessContactsList);
-    $("#connect").bind("submit", connection);
-    $("#connect_page").bind("click", redirectConnect);
-    $("#redirec_reg").bind("click", redirecRegister);
-    $("#redirect_con").bind("click", redirectConnect);
-    $("#param").bind("click", showParam);
-    $("#contacts_list").bind("click", getContactsList);
-    $("#delete").bind("click",delete_account);
-    $("#deconnecter").bind("click",redirectConnect);
-    $("#redirect_regis").bind("click", redirectConnect);
-    $("#profil").bind("click", showProfil);
-});
-
+ $("document").ready(function () {
+ getPreviousMessages();
+ enableChat();
+ $("#action_add").bind("submit", inscription);
+ $("#redirec_register").bind("click", redirecRegister);
+ $("#contacts_list").bind("click", onSuccessContactsList);
+ $("#connect").bind("submit", connection);
+ $("#connect_page").bind("click", redirectConnect);
+ $("#redirec_reg").bind("click", redirecRegister);
+ $("#redirect_con").bind("click", redirectConnect);
+ $("#param").bind("click", showParam);
+ $("#contacts_list").bind("click", getContactsList);
+ $("#delete").bind("click", delete_account);
+ $("#deconnecter").bind("click", redirectConnect);
+ $("#redirect_regis").bind("click", redirectConnect);
+ $("#profil").bind("click", showProfil);
+ });
+ 
 
 function onSuccessContactsList(contacts) {
 //	for (var i = 0; i < contacts.length; i++) {
@@ -257,9 +258,10 @@ function onSuccessContactsList(contacts) {
 //	}
     // TODO : requete AJAX
     //window.location.href = 'contact.html';
-    $.get(serverUrl + 'api/contacts/', function (data) {
-        $('#content').empty().html(data);
-    });
+//    $.get(serverUrl + 'api/contacts/', function (data) {
+//        $('#content').empty().html(data);
+//    });
+    console.log('success');
     for (var i = 0; i < contacts.length; i++) {
         var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
         console.log(phoneNumber);
@@ -267,25 +269,36 @@ function onSuccessContactsList(contacts) {
         //getPosition(phoneNumber);
         $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
             $('#contacts-dispo').after(data);
+            $('.chatroom').bind('click', showChat(data));
         });
-
     }
+}
+
+function showChat(data) {
+    $.get(serverUrl + 'chat/', data, function (data) {
+        $('#content').empty().html(data);
+    });
 }
 
 // permet d'éliminer le formattage américain des numéros de tel
 function phoneNumberParser(originalPhoneNumber) {
-    var phoneNumber = '';
+    var phoneNumber = originalPhoneNumber;
     // supresssion des espaces
-    var tmp = originalPhoneNumber.split(' ');
-    for (var i = 0; i < tmp.length; i++) {
-        phoneNumber += tmp[i];
-    }
-    // suppression des '-'
-    tmp = phoneNumber.split('-');
-    phoneNumber = '';
-    for (var i = 0; i < tmp.length; i++) {
-        phoneNumber += tmp[i];
-    }
+//    var tmp = originalPhoneNumber.split(' ');
+//    for (var i = 0; i < tmp.length; i++) {
+//        phoneNumber += tmp[i];
+//    }
+//    // suppression des '-'
+//    tmp = phoneNumber.split('-');
+//    phoneNumber = '';
+//    for (var i = 0; i < tmp.length; i++) {
+//        phoneNumber += tmp[i];
+//    }
+    // supprime tous les ' ', '-', '(', ')'
+    phoneNumber = phoneNumber.replace(/ /g, '');
+    phoneNumber = phoneNumber.replace(/-/g, '');
+    phoneNumber = phoneNumber.replace('(', '');
+    phoneNumber = phoneNumber.replace(')', '');
     return phoneNumber;
 }
 
@@ -294,11 +307,11 @@ function onErrorContactsList(contactError) {
     alert('onError!');
 }
 
-function delete_account(e){
+function delete_account(e) {
     $.ajax({
         url: serverUrl + 'api/user/',
         type: 'DELETE',
-        data : {
+        data: {
             "telephone": telephoneGlob
         },
         success: function (code, statut) {
@@ -316,7 +329,7 @@ function update_account() {
     $.ajax({
         url: serverUrl + 'api/user/',
         type: 'PUT',
-        data : {
+        data: {
             "ancien_tel": telephoneGlob,
             "telephone": e.target.telephone.value,
             "pseudo": e.target.pseudo.value,
@@ -332,29 +345,29 @@ function update_account() {
     });
 }
 
-function showParam(){
+function showParam() {
     $.ajax({
         url: serverUrl + 'api/parameters/',
         type: 'GET',
         success: function (code, statut) {
             $('#content').empty().html(code);
             // Bouton de deconnexion
-            $("#deconnecter").bind("click",redirectConnect);
+            $("#deconnecter").bind("click", redirectConnect);
             // Supprimer Compter
-            $("#delete").bind("click",delete_account);
+            $("#delete").bind("click", delete_account);
             // Mettre à jour le compte
-            $("#update").bind("submit",update_account);
+            $("#update").bind("submit", update_account);
             bindButton();
         },
         error: function (code, statut) {
             console.log(code);
-            
+
         }
     });
 
 }
 
-function showIndex(){
+function showIndex() {
     $.ajax({
         url: serverUrl + 'api/menu/',
         type: 'GET',
@@ -362,7 +375,7 @@ function showIndex(){
             $('#content').empty().html(code);
             bindButton();
         },
-        error: function(code, statut) {
+        error: function (code, statut) {
             console.log(code);
         }
     });
@@ -379,7 +392,7 @@ function showProfil() {
             $('#content').empty().html(code);
             bindButton();
         },
-        error: function(code, statut) {
+        error: function (code, statut) {
             console.log(code);
         }
     });
@@ -466,8 +479,8 @@ var app = {
         // Retourner a la page de connexion apres creation de compte
         $("#redirect_regis").bind("click", redirectConnect);
         $("#contacts_list").bind("click", getContactsList);
-        getPreviousMessages();
-        enableChat();
+//        getPreviousMessages();
+//        enableChat();
         // Retourner la page des paramètres
         //$("#param").bind("click", showParam);
         // Boutton de deconnexion

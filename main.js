@@ -7,6 +7,13 @@ var io = require('socket.io')(server);
 var mustacheExpress = require('mustache-express');
 var app_router = require('./routes/ctrl');
 var app_services = require('./services/projet')
+var session = require('express-session')
+
+app.use(session({
+	secret: 'ssshhhhh',
+	resave: false,
+	saveUninitialized: true
+}));
 
 var allowCrossDomain = function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
