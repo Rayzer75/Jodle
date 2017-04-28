@@ -21,7 +21,8 @@ var serverUrl = 'http://192.168.0.10:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
-var socket = io.connect(serverUrl);
+//var socket = io.connect(serverUrl);
+var socket;
 var telephoneGlob;
 var longitudeGlob;
 var latitudeGlob;
@@ -128,6 +129,7 @@ function redirecRegister() {
 }
 
 function enableChat() {
+    socket = io.connect(serverUrl);
     $('#inputFileToLoad').change(function () {
         var filesSelected = document.getElementById("inputFileToLoad").files;
         if (filesSelected.length > 0) {
@@ -161,7 +163,8 @@ function enableChat() {
             fileReader.readAsDataURL(fileToLoad);
         }
     });
-    $('#chat').submit(function () {
+    $('#chat').submit(function (e) {
+        e.preventDefault();
         socket.emit('chat message', {sender: $('#myPseudo').text(),
             type: 'text',
             data: $('#m').val(),
@@ -234,7 +237,7 @@ function buildMessage(sender, type, data) {
     return message;
 }
 
-
+/*
  $("document").ready(function () {
  getPreviousMessages();
  enableChat();
@@ -252,7 +255,7 @@ function buildMessage(sender, type, data) {
  $("#redirect_regis").bind("click", redirectConnect);
  $("#profil").bind("click", showProfil);
  });
- 
+ */
 
 function onSuccessContactsList(contacts) {
 //	for (var i = 0; i < contacts.length; i++) {
@@ -271,7 +274,7 @@ function onSuccessContactsList(contacts) {
         console.log(phoneNumber);
         $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
             $('#contacts-dispo').after(data);
-            $('.chatroom').bind('click', showChat(data));
+            $('.chatroom').click(data, showChat);
         });
     }
 }
@@ -279,6 +282,7 @@ function onSuccessContactsList(contacts) {
 function showChat(data) {
     $.get(serverUrl + 'chat/', data, function (data) {
         $('#content').empty().html(data);
+        enableChat();
     });
 }
 
