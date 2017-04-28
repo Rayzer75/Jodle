@@ -61,10 +61,10 @@ function sendLocation(position) {
     
     // Met a jour sa position à chaque connexion à l'application
     updatePosition();
-    
-    console.log(latitudeGlob);
-    console.log(longitudeGlob);
-    console.log(`More or less ${position.coords.accuracy} meters.`);
+
+    //console.log(latitudeGlob);
+    //console.log(longitudeGlob);
+    //console.log(`More or less ${position.coords.accuracy} meters.`);
 }
 
 function errorLocation() {
@@ -387,6 +387,57 @@ function showProfil() {
         success: function (code, statut) {
             $('#content').empty().html(code);
             bindButton();
+        },
+        error: function(code, statut) {
+            console.log(code);
+        }
+    });
+}
+
+/**
+ * Retourne la position : la longitude et la latitude d'une personne
+ * @param {type} telephone
+ * @returns {undefined}
+ */
+function getPosition(telephone) {
+    $.ajax({
+        url: serverUrl + 'api/user/pos/' + telephone,
+        type: 'GET',
+        success: function (code, statut) {
+            // return latitude et longitude
+            
+            console.log(code.longitude);
+            console.log(code.latitude);
+            console.log(code);
+            getDistance(longitudeGlob, latitudeGlob, code.longitude, code.latitude);
+        },
+        error: function(code, statut) {
+            console.log(code);
+        }
+    });
+}
+
+/**
+ * Fonction qui retourne la distance entre l'utilisateur et un de ses contacts
+ * @param {type} longitude de l'utilisateur
+ * @param {type} latitude de l'utilisatuer
+ * @returns {undefined}
+ */
+function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
+    console.log("RENTRE");
+    $.ajax({
+        url: serverUrl + 'api/user/pos/',
+        type: 'GET',
+        data: {
+            "longitude": longitudeGlob,
+            "latitude": latitudeGlob,
+            "longitudeContact": longitudeContact,
+            "latitudeContact": latitudeContact
+        },
+        success: function (code, statut) {
+            // return distance
+            console.log(code.dist);
+            console.log(code);
         },
         error: function(code, statut) {
             console.log(code);
