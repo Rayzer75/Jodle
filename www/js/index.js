@@ -72,10 +72,6 @@ function errorLocation() {
     console.log("ERROR LOCATION");
 }
 
-function createPoint(longitude, latitude){
-    
-}
-
 function updatePosition() {
     console.log(telephoneGlob);
     console.log(longitudeGlob);
@@ -265,8 +261,10 @@ function onSuccessContactsList(contacts) {
         $('#content').empty().html(data);
     });
     for (var i = 0; i < contacts.length; i++) {
-        var phoneNumber = '\'' + phoneNumberParser(contacts[i].phoneNumbers[0].value) + '\'';
+        var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
         console.log(phoneNumber);
+        // Calcule la distance entre l'utilisateur et ses contacts
+        //getPosition(phoneNumber);
         $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
             $('#contacts-dispo').after(data);
         });
@@ -428,9 +426,9 @@ function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
             "latitudeContact": latitudeContact
         },
         success: function (code, statut) {
-            // return distance
+            // la distance entre 2 utilisateurs
             console.log(code.dist);
-            console.log(code);
+            
         },
         error: function(code, statut) {
             console.log(code);
