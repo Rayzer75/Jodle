@@ -23,22 +23,21 @@ function addUser(req, res) {
     var prenom = req.body.prenom
     var tel = req.body.tel
 
-    db.addUser(tel, pseudo, mdp, nom, prenom, 1, function (error, data) {
+    db.addUser(tel, pseudo, mdp, nom, prenom, function (error, data) {
         res.status(200).send('ok');
     })
 }
 
 function checkUser(req, res) {
-    var pseudo = '\'' + req.query.pseudo + '\'';
-    var mdp = '\'' + req.query.mdp + '\'';
-    var telephone = '\'' + req.query.telephone + '\'';
+    var pseudo = req.query.pseudo;
+    var mdp = req.query.mdp;
+    var telephone = req.query.telephone;
 
     db.checkUser(mdp, telephone, pseudo, function (error, data) {
         if (error == null)
         {
-            //res.status(200).send({success: 'ok', data: data});
             console.log(data);
-            res.render('menu', {pseudo: data});
+            res.render('menu', {pseudo: data});     
         } else
         {
             console.log(error);
@@ -87,9 +86,41 @@ function getAllMedias(idEmit, idDest, callback) {
         {
             console.log(data);
             callback(data);
+        } else {
+            console.log(error);
+        }
+    });
+}
+
+function deleteExpiredMedias() {
+    db.deleteExpiredMedias();
+}
+
+function deleteUser(req,res) {
+    var telephone = req.body.telephone;
+    db.deleteUser(telephone, function (error, data) {
+        if (error == null)
+        {
+            res.status(200).send('ok');
+            console.log(data);
         } else
         {
             console.log(error);
+        }
+    })
+}
+
+function updateUser(req,res) {
+    var ancien_tel = req.body.ancien_tel;
+    var nouv_tel = req.body.telephone;
+    var pseudo = req.body.pseudo;
+    var mdp = req.body.mdp;
+    
+    db.updateUser(ancien_tel, nouv_tel, pseudo, mdp, function (error, data) {
+        if (error == null)
+        {
+            res.status(200).send('ok');
+            console.log(data);
         }
     });
 }
@@ -99,15 +130,47 @@ function deleteAllMedias(idEmit, idDest) {
         if (error == null)
         {
             console.log("Deleted medias");
-        } else
+                    } else
         {
             console.log(error);
+        }
+            });
+}
+
+function showProfil(req,res) {
+    var telephone = req.query.telephone;
+    
+    db.showProfil(telephone, function(error, data) {
+        if (error == null)
+        {
+            console.log(data);
+            res.render('profil', {pseudo: data, nom: data, prenom: data, telephone: data}); 
         }
     });
 }
 
-function deleteExpiredMedias() {
-    db.deleteExpiredMedias();
+
+function showIndex(req,res) {
+    res.status(200).render('menu');
+}
+
+function updatePosition(req,res) {
+    var telephone = req.body.telephoneG;
+    var latitude = req.body.latitudeG;
+    var longitude = req.body.longitudeG;
+    
+    db.updatePosition(latitude, longitude, telephone, function (error, data) {
+        if (error == null)
+        {
+            console.log("OUI");
+            res.status(200).send('ok');
+            console.log(data);
+        } else
+        {
+            console.log("ERROR");
+            console.log(error);
+        }
+    })
 }
 
 module.exports = {
@@ -120,5 +183,10 @@ module.exports = {
     addMedia,
     getAllMedias,
     deleteAllMedias,
-    deleteExpiredMedias
+    deleteExpiredMedias,
+    deleteUser,
+    updateUser,
+    showProfil,
+    showIndex,
+    updatePosition
 }

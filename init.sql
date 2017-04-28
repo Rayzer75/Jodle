@@ -50,7 +50,8 @@ CREATE TABLE utilisateur (
     telephone character varying(15) NOT NULL,
     nom character varying(30) NOT NULL,
     prenom character varying(30) NOT NULL,
-    position character
+    latitude Decimal,
+    longitude Decimal
 );
 
 CREATE TABLE media(

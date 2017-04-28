@@ -17,18 +17,22 @@
  * under the License.
  */
 
-var serverUrl = 'http://192.168.0.10:8080/';
+var serverUrl = 'http://192.168.0.12:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
 var socket = io.connect(serverUrl);
-
+var telephoneGlob;
+var longitudeGlob;
+var latitudeGlob;
 
 function redirectConnect() {
     window.location.href = 'index.html';
 }
 
 function connection(e) {
+    // Garde le numero de telephone pour supprimer
+    telephoneGlob = e.target.telephone.value;
     $.ajax({
         url: serverUrl + 'api/user/',
         type: 'GET',
@@ -36,15 +40,61 @@ function connection(e) {
         contentType: 'application/x-www-form-urlencoded',
         success: function (code, statut) {
             $('#content').empty().html(code);
-            $("#param").bind("click", showParam);
+            $("#connect_page").bind("click", redirectConnect);
+            // contient les boutons du menu
+            bindButton();
+            navigator.geolocation.getCurrentPosition(sendLocation,errorLocation,{timeout:10000});
         },
         error: function (code, statut) {
             $('#content').empty().html(code);
+            $("#connect_page").bind("click", redirectConnect);
         }
     });
     e.preventDefault();
 }
 
+// https://www.dataiku.com/learn/guide/other/geo/convert-coordinates-with-PostGIS.html
+// http://www.postgis.org/docs/ST_Distance.html
+// Fonction pour obtenir la latitude et la longitude de la personne
+function sendLocation(position) {
+    latitudeGlob = position.coords.latitude;
+    longitudeGlob = position.coords.longitude;
+    
+    // Met a jour sa position à chaque connexion à l'application
+    updatePosition();
+    
+    console.log(latitudeGlob);
+    console.log(longitudeGlob);
+    console.log(`More or less ${position.coords.accuracy} meters.`);
+}
+
+function errorLocation() {
+    console.log("ERROR LOCATION");
+}
+
+function createPoint(longitude, latitude){
+    
+}
+
+function updatePosition() {
+    console.log(telephoneGlob);
+    console.log(longitudeGlob);
+    $.ajax({
+        url: serverUrl + 'api/user/pos/',
+        type: 'PUT',
+        data : {
+            "telephoneG": telephoneGlob,
+            "longitudeG": longitudeGlob,
+            "latitudeG": latitudeGlob
+        },
+        success: function (code, statut) {
+            console.log(code);
+        },
+        error: function (code, statut) {
+            console.log(code);
+        }
+    });
+}
 
 function inscription(e) {
     $.ajax({
@@ -196,6 +246,10 @@ $("document").ready(function () {
     $("#redirect_con").bind("click", redirectConnect);
     $("#param").bind("click", showParam);
     $("#contacts_list").bind("click", getContactsList);
+    $("#delete").bind("click",delete_account);
+    $("#deconnecter").bind("click",redirectConnect);
+    $("#redirect_regis").bind("click", redirectConnect);
+    $("#profil").bind("click", showProfil);
 });
 
 
@@ -242,18 +296,104 @@ function onErrorContactsList(contactError) {
     alert('onError!');
 }
 
-function showParam() {
+function delete_account(e){
     $.ajax({
-        url: serverUrl + 'api/parameters/',
-        type: 'GET',
+        url: serverUrl + 'api/user/',
+        type: 'DELETE',
+        data : {
+            "telephone": telephoneGlob
+        },
         success: function (code, statut) {
-            $('#content').empty().html(code);
+            // TODO : Faire une page de validation de suppression
+            redirectConnect();
         },
         error: function (code, statut) {
             console.log(code);
         }
     });
+    e.preventDefault();
+}
 
+function update_account() {
+    $.ajax({
+        url: serverUrl + 'api/user/',
+        type: 'PUT',
+        data : {
+            "ancien_tel": telephoneGlob,
+            "telephone": e.target.telephone.value,
+            "pseudo": e.target.pseudo.value,
+            "mdp": e.target.mdp.value
+        },
+        success: function (code, statut) {
+            // TODO : Faire une page de validation de mise à jour
+            redirectConnect();
+        },
+        error: function (code, statut) {
+            console.log(code);
+        }
+    });
+}
+
+function showParam(){
+    $.ajax({
+        url: serverUrl + 'api/parameters/',
+        type: 'GET',
+        success: function (code, statut) {
+            $('#content').empty().html(code);
+            // Bouton de deconnexion
+            $("#deconnecter").bind("click",redirectConnect);
+            // Supprimer Compter
+            $("#delete").bind("click",delete_account);
+            // Mettre à jour le compte
+            $("#update").bind("submit",update_account);
+            bindButton();
+        },
+        error: function (code, statut) {
+            console.log(code);
+            
+        }
+    });
+
+}
+
+function showIndex(){
+    $.ajax({
+        url: serverUrl + 'api/menu/',
+        type: 'GET',
+        success: function (code, statut) {
+            $('#content').empty().html(code);
+            bindButton();
+        },
+        error: function(code, statut) {
+            console.log(code);
+        }
+    });
+}
+
+function showProfil() {
+    $.ajax({
+        url: serverUrl + 'api/profil/',
+        type: 'GET',
+        data: {
+            "telephone": telephoneGlob
+        },
+        success: function (code, statut) {
+            $('#content').empty().html(code);
+            bindButton();
+        },
+        error: function(code, statut) {
+            console.log(code);
+        }
+    });
+}
+
+// Avoir les boutons du menu fonctionnel (A appeler)
+function bindButton() {
+    $("#param").bind("click", showParam);
+    $("#accueil").bind("click", showIndex);
+    $("#profil").bind("click", showProfil);
+    // TODO
+    //$("#list_contact").bind("click", );
 }
 
 var app = {

@@ -5,6 +5,10 @@ var settings = {
     port: 5432,
     database: 'test',
     user: 'francis'
+//    database: 'jodledb',
+//    user: 'postgres',
+//    password: 'postgres'
+
 };
 
 module.exports = {
