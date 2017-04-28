@@ -37,16 +37,6 @@ app.set('view engine', 'mustache');
 
 app.use('/api/', app_router);
 
-/*io.on('connect', function (socket){
- console.log("Start animation");
- surface_services.animationOn(socket)
- 
- socket.on('disconnect', function(){
- console.log("Stop animation")
- surface_services.animationOff(socket)
- })
- })*/
-
 // 
 // le repertoire public va contenir les
 // fichiers statiques
@@ -75,38 +65,33 @@ app.get('/index', function (req, res) {
     res.sendFile(__dirname + '/www/index.html');
 });
 
-var connected = 0;
-
 io.on('connection', function (socket) {
-    connected++;
-    io.emit('server message', {sender: 'Serveur', type: 'text', data: 'Connexion. Il y a ' + connected + ' personne(s).'});
     socket.on('chat message', function (msg) {
-        if (connected < 2) { // s'il n'y a qu'une personne, on enregistre dans la bdd
+        if (io.sockets.adapter.rooms[msg.room].length < 2) { // s'il n'y a qu'une personne dans la salle, on enregistre dans la bdd
             timeout = app_services.getTimeout();
             app_services.addMedia(msg, timeout);
-            io.emit('server message', {sender: 'Serveur', type: 'text', data: 'Ce message sera transmis quand le destinataire sera connecté.'});
+            io.to(msg.room).emit('server message', {sender: 'Serveur', type: 'text', data: 'Ce message sera transmis quand le destinataire sera connecté.'});
         }
-        io.emit('chat message', msg);
+        console.log('message in room : ' + msg.room);
+        io.to(msg.room).emit('chat message', msg);
     });
 
-    socket.on('disconnect', function () {
-        connected--;
-        io.emit('server message', {sender: 'Serveur', type: 'text', data: 'Déconnexion. Il y a ' + connected + ' personne(s).'});
-    });
-    
     socket.on('is connected', function (user) {
         app_services.getAllMedias(user.emit, user.dest, function(data) {
             var length = data.length;
             if (length > 0) {
-                io.emit('server message', {sender: 'Serveur', type: 'text', data: 'Vous avez reçu les messages suivants :'});
+                io.to(user.room).emit('server message', {sender: 'Serveur', type: 'text', data: 'Vous avez reçu les messages suivants :'});
                 app_services.deleteAllMedias(user.emit, user.dest);
             }
             for (var i = 0; i < length; i++) {
-                io.emit('new message', {sender: user.sender, type: data[i].typemedia, data: data[i].data});
+                io.to(user.room).emit('new message', {sender: user.sender, type: data[i].typemedia, data: data[i].data});
             }  
         });
         app_services.deleteExpiredMedias();
     });
-
+    
+    socket.on('room', function(room) {
+        socket.join(room);
+    });
 
 });

@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var serverUrl = 'http://192.168.0.12:8080/';
+var serverUrl = 'http://192.168.0.10:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
@@ -152,7 +152,8 @@ function enableChat() {
                     type: typeMedia,
                     data: srcData,
                     emit: $('#emit').text(),
-                    dest: $('#dest').text()
+                    dest: $('#dest').text(),
+                    room: getRoom()
                 }
                 );
             };
@@ -165,7 +166,8 @@ function enableChat() {
             type: 'text',
             data: $('#m').val(),
             emit: $('#emit').text(),
-            dest: $('#dest').text()
+            dest: $('#dest').text(),
+            room: getRoom()
         });
         $('#m').val('');
         return false;
@@ -182,8 +184,9 @@ function enableChat() {
         $('#messages').append(message);
         $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
     });
+    socket.emit('room', getRoom());
     // le destinataire a-t-il émis des messages ?
-    socket.emit('is connected', {emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text()});
+    socket.emit('is connected', {emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text(), room: getRoom()}); 
     socket.on('new message', function (msg) {
         var message = buildMessage(msg.sender, msg.type, msg.data);
         lastKey++;
@@ -191,6 +194,19 @@ function enableChat() {
         $('#messages').append(message);
         $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
     });
+}
+
+// le nom d'une room est de la forme 'TEL1 TEL2' où TEL1 < TEL2
+function getRoom() {
+    var dest = $('#dest').text();
+    var emit = $('#emit').text();
+    var room;
+    if (dest < emit) {
+        room = dest + ' ' + emit;
+    } else {
+        room = emit + ' ' + dest;
+    }
+    return room;
 }
 
 function getPreviousMessages() {
@@ -233,7 +249,7 @@ function buildMessage(sender, type, data) {
     return message;
 }
 
-/*
+
  $("document").ready(function () {
  getPreviousMessages();
  enableChat();
@@ -251,7 +267,7 @@ function buildMessage(sender, type, data) {
  $("#redirect_regis").bind("click", redirectConnect);
  $("#profil").bind("click", showProfil);
  });
- */
+ 
 
 function onSuccessContactsList(contacts) {
 //	for (var i = 0; i < contacts.length; i++) {
@@ -281,6 +297,7 @@ function showChat(data) {
     $.get(serverUrl + 'chat/', data, function (data) {
         $('#content').empty().html(data);
         enableChat();
+        getPreviousMessages();
     });
 }
 
