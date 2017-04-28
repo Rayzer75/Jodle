@@ -176,6 +176,43 @@ function updatePosition(req,res) {
     })
 }
 
+function getPosition(req,res) {
+    var telephone = req.params.id;
+    
+    db.getPosition(telephone, function (error, data) {
+        if (error == null)
+        {
+            console.log("OUI");
+            res.status(200).send({longitude: data.longitude, latitude: data.latitude});
+            console.log(data);
+        } else
+        {
+            console.log("ERROR");
+            console.log(error);
+        }
+    })
+}
+
+function getDist(req,res) {
+    var longitude = req.query.longitude;
+    var latitude = req.query.latitude;
+    var longitudeContact = req.query.longitudeContact;
+    var latitudeContact = req.query.latitudeContact;
+    
+    db.getDist(longitude, latitude, longitudeContact, latitudeContact, function (error, data) {
+        if (error == null)
+        {
+            console.log("OUI");
+            res.status(200).send({dist: data.dist});
+            console.log(data);
+        } else
+        {
+            console.log("ERROR");
+            console.log(error);
+        }
+    })
+}
+
 function showChat(req,res) {
     data = req.query.data;
     console.log(data);
@@ -198,5 +235,7 @@ module.exports = {
     showProfil,
     showIndex,
     updatePosition,
+    getPosition,
+    getDist,
     showChat
 }

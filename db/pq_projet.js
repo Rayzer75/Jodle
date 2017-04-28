@@ -20,7 +20,7 @@ function getContact(telephone, callback)
 }
 
 function getPosition(telephone, callback){
-     var requete = `select latitude, longitude from public.utilisateur where telephone = ${telephone}`
+    var requete = `select latitude, longitude from public.utilisateur where telephone = '${telephone}'`
     console.log(requete);
     
     db.one(requete, null)
@@ -169,6 +169,20 @@ function updatePosition(latitude, longitude, telephone, callback) {
         })
 }
 
+function getDist(longitude, latitude, longitudeContact, latitudeContact, callback) {
+    var requete = `SELECT ST_Distance(ST_Transform(ST_GeomFromText('POINT(${longitude} ${latitude})',4326),26986),ST_Transform(ST_GeomFromText('POINT(${longitudeContact} ${latitudeContact})',4326),26986)) as dist;`
+    
+    console.log(requete);
+    
+    db.one(requete, null)
+        .then(function (data) {
+            callback(null,data)
+        })
+        .catch(function (error) {
+            callback(error,null)
+        })
+}
+
 module.exports = {
   getContact,
   getPosition,
@@ -182,5 +196,6 @@ module.exports = {
   deleteAllMedias,
   deleteExpiredMedias,
   showProfil,
-  updatePosition
+  updatePosition,
+  getDist
 };
