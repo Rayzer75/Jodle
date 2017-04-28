@@ -44,8 +44,7 @@ function connection(e) {
             $("#connect_page").bind("click", redirectConnect);
             // contient les boutons du menu
             bindButton();
-            getContactsList();
-            navigator.geolocation.getCurrentPosition(sendLocation, errorLocation, {timeout: 10000});
+            navigator.geolocation.getCurrentPosition(sendLocation, errorLocation, {timeout: 10000}, {enableHighAccuracy: true});
         },
         error: function (code, statut) {
             $('#content').empty().html(code);
@@ -64,15 +63,22 @@ function sendLocation(position) {
 
     // Met a jour sa position à chaque connexion à l'application
     updatePosition();
-
+    getPosition(2543);
+    getContactsList();
 
     //console.log(latitudeGlob);
     //console.log(longitudeGlob);
     //console.log(`More or less ${position.coords.accuracy} meters.`);
 }
 
-function errorLocation() {
-    console.log("ERROR LOCATION");
+function errorLocation(error) {
+    if (error.code == error.PERMISSION_DENIED) {
+        console.log("you denied me :-(");
+    } else {
+        // 2. position unavailable
+        // 3. time out
+        console.log(error.code);
+    }
 }
 
 function updatePosition() {
@@ -249,25 +255,23 @@ function buildMessage(sender, type, data) {
     return message;
 }
 
-/*
- $("document").ready(function () {
- getPreviousMessages();
- enableChat();
- $("#action_add").bind("submit", inscription);
- $("#redirec_register").bind("click", redirecRegister);
- $("#contacts_list").bind("click", onSuccessContactsList);
- $("#connect").bind("submit", connection);
- $("#connect_page").bind("click", redirectConnect);
- $("#redirec_reg").bind("click", redirecRegister);
- $("#redirect_con").bind("click", redirectConnect);
- $("#param").bind("click", showParam);
- $("#contacts_list").bind("click", getContactsList);
- $("#delete").bind("click", delete_account);
- $("#deconnecter").bind("click", redirectConnect);
- $("#redirect_regis").bind("click", redirectConnect);
- $("#profil").bind("click", showProfil);
- });
-*/
+ /*$("document").ready(function () {
+    getPreviousMessages();
+    enableChat();
+    $("#action_add").bind("submit", inscription);
+    $("#redirec_register").bind("click", redirecRegister);
+    $("#contacts_list").bind("click", onSuccessContactsList);
+    $("#connect").bind("submit", connection);
+    $("#connect_page").bind("click", redirectConnect);
+    $("#redirec_reg").bind("click", redirecRegister);
+    $("#redirect_con").bind("click", redirectConnect);
+    $("#param").bind("click", showParam);
+    $("#contacts_list").bind("click", getContactsList);
+    $("#delete").bind("click", delete_account);
+    $("#deconnecter").bind("click", redirectConnect);
+    $("#redirect_regis").bind("click", redirectConnect);
+    $("#profil").bind("click", showProfil);
+ });*/
  
 
 function onSuccessContactsList(contacts) {
@@ -423,7 +427,6 @@ function showProfil() {
 /**
  * Retourne la position : la longitude et la latitude d'une personne
  * @param {type} telephone
- * @returns {undefined}
  */
 function getPosition(telephone) {
     $.ajax({
@@ -463,7 +466,7 @@ function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
         success: function (code, statut) {
             // la distance entre 2 utilisateurs
             console.log(code.dist);
-            $('#contacts-dispo').after(code.dist);
+            $('#contacts-dispo').after("<li><label>Distance : </label>" + code.dist + "</li>");
         },
         error: function(code, statut) {
             console.log(code);
