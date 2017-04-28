@@ -46,6 +46,7 @@ function connection(e) {
             bindButton();
             getContactsList();
             navigator.geolocation.getCurrentPosition(sendLocation, errorLocation, {timeout: 10000});
+            getPosition(2516);
         },
         error: function (code, statut) {
             $('#content').empty().html(code);
@@ -233,8 +234,8 @@ function buildMessage(sender, type, data) {
     return message;
 }
 
-/*
- $("document").ready(function () {
+
+ /*$("document").ready(function () {
     getPreviousMessages();
     enableChat();
     $("#action_add").bind("submit", inscription);
@@ -404,7 +405,6 @@ function showProfil() {
 /**
  * Retourne la position : la longitude et la latitude d'une personne
  * @param {type} telephone
- * @returns {undefined}
  */
 function getPosition(telephone) {
     $.ajax({
@@ -444,7 +444,7 @@ function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
         success: function (code, statut) {
             // la distance entre 2 utilisateurs
             console.log(code.dist);
-            $('#contacts-dispo').after(code.dist);
+            $('#contacts-dispo').after("<li><label>Distance : </label>" + code.dist + "</li>");
         },
         error: function(code, statut) {
             console.log(code);
