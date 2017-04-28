@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var serverUrl = 'http://192.168.0.10:8080/';
+var serverUrl = 'http://192.168.0.12:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
@@ -73,10 +73,6 @@ function sendLocation(position) {
 
 function errorLocation() {
     console.log("ERROR LOCATION");
-}
-
-function createPoint(longitude, latitude) {
-
 }
 
 function updatePosition() {
@@ -270,8 +266,10 @@ function onSuccessContactsList(contacts) {
 //    });
     console.log('success');
     for (var i = 0; i < contacts.length; i++) {
-        var phoneNumber = '\'' + phoneNumberParser(contacts[i].phoneNumbers[0].value) + '\'';
+        var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
         console.log(phoneNumber);
+        // Calcule la distance entre l'utilisateur et ses contacts
+        //getPosition(phoneNumber);
         $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
             $('#contacts-dispo').after(data);
             $('.chatroom').click(data, showChat);
@@ -445,9 +443,9 @@ function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
             "latitudeContact": latitudeContact
         },
         success: function (code, statut) {
-            // return distance
+            // la distance entre 2 utilisateurs
             console.log(code.dist);
-            console.log(code);
+            
         },
         error: function(code, statut) {
             console.log(code);
