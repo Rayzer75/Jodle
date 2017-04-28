@@ -249,7 +249,7 @@ function buildMessage(sender, type, data) {
     return message;
 }
 
-
+/*
  $("document").ready(function () {
  getPreviousMessages();
  enableChat();
@@ -267,6 +267,7 @@ function buildMessage(sender, type, data) {
  $("#redirect_regis").bind("click", redirectConnect);
  $("#profil").bind("click", showProfil);
  });
+*/
  
 
 function onSuccessContactsList(contacts) {
@@ -285,7 +286,7 @@ function onSuccessContactsList(contacts) {
         var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
         console.log(phoneNumber);
         // Calcule la distance entre l'utilisateur et ses contacts
-        //getPosition(phoneNumber);
+        getPosition(phoneNumber);
         $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
             $('#contacts-dispo').after(data);
             $('.chatroom').click(data, showChat);
@@ -454,15 +455,15 @@ function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
         url: serverUrl + 'api/user/pos/',
         type: 'GET',
         data: {
-            "longitude": longitudeGlob,
-            "latitude": latitudeGlob,
+            "longitude": longitude,
+            "latitude": latitude,
             "longitudeContact": longitudeContact,
             "latitudeContact": latitudeContact
         },
         success: function (code, statut) {
             // la distance entre 2 utilisateurs
             console.log(code.dist);
-            
+            $('#contacts-dispo').after(code.dist);
         },
         error: function(code, statut) {
             console.log(code);
