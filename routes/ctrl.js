@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var service = require('../services/projet');
 
+router.get('/user/:id', service.getContactInfo);
 router.get('/user/contacts/:id', service.listContacts);
 router.get('/user/pos/:id', service.getPosition);
 router.get('/user/pos/', service.getDist);

@@ -3,9 +3,8 @@
 var settings = {
     host: '127.0.0.1',
     port: 5432,
-    database: 'jodledb',
-    user: 'postgres',
-    password: 'postgres'
+    database: 'test',
+    user: 'francis'
 };
 
 module.exports = {

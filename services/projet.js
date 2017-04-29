@@ -6,8 +6,38 @@ function listContacts(req, res) {
     {
         if (error == null)
         {
-            res.status(200).render('contact', {contact: data});
+            console.log(getChatroom(data.telephone, req.session.telephone));
+            res.status(200).render('contact', {contact: data, chatroom: getChatroom(data.telephone, req.session.telephone)});
             console.log(data);
+        } else
+        {
+            console.log(error);
+            res.status(500).send(error);
+        }
+    })
+}
+
+function getChatroom(tel1, tel2) {
+    tel1.replace('\'','');
+    tel1.replace('\'','');
+    if (tel1 < tel2) {
+        return tel1 + '-' + tel2;
+    } else {
+        return tel2 + '-' + tel1;
+    }
+}
+
+function getContactInfo(req, res) {
+
+    db.getContact(req.params.id, function (error, data)
+    {
+        if (error == null)
+        {
+            console.log(data);
+            res.status(200).json({
+                pseudo : data.pseudo,
+                telephone : data.telephone        
+            })
         } else
         {
             console.log(error);
@@ -214,13 +244,20 @@ function getDist(req,res) {
 }
 
 function showChat(req,res) {
-    data = req.query.data;
-    console.log(data);
-    res.status(200).render('chat', {data: data});
+    console.log("CHAT");
+    var tel = req.query.telephone;
+    var pseudo = req.query.pseudo;
+    console.log(tel + ' -> ' + pseudo);
+    res.status(200).render('chat', {pseudo1: req.session.pseudo,
+                                    tel1: req.session.telephone,
+                                    pseudo2: pseudo,
+                                    tel2: tel
+                          });
 }
 
 module.exports = {
     listContacts,
+    getContactInfo,
     addUser,
     checkUser,
     showContacts,
