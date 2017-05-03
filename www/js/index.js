@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var serverUrl = 'http://192.168.0.10:8080/';
+var serverUrl = 'http://129.88.242.129:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
@@ -64,7 +64,7 @@ function sendLocation(position) {
 
     // Met a jour sa position à chaque connexion à l'application
     updatePosition();
-    getPosition(2543);
+   // getPosition(2543);
 
     //console.log(latitudeGlob);
     //console.log(longitudeGlob);
