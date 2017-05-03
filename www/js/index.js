@@ -64,7 +64,7 @@ function sendLocation(position) {
 
     // Met a jour sa position à chaque connexion à l'application
     updatePosition();
-    getPosition(2543);
+   // getPosition(2543);
 
     //console.log(latitudeGlob);
     //console.log(longitudeGlob);
