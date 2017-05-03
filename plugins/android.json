@@ -13,10 +13,10 @@
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "fr.ensimag.Jodle"
         },
-        "cordova-plugin-whitelist": {
+        "cordova-plugin-geolocation": {
             "PACKAGE_NAME": "fr.ensimag.Jodle"
         },
-        "cordova-plugin-geolocation": {
+        "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "fr.ensimag.Jodle"
         }
     },
