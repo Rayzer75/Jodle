@@ -10,18 +10,20 @@
         <link rel="stylesheet" type="text/css" href="css/style.css">
     </head>
     <body>
-        <form>
-            <input type="text" id = "pseudo" placeholder="Pseudo">
-            <input type="text" id = "mdp" placeholder="Mot de passe">
-            <input type="text" id = "nom" placeholder="Nom">
-            <input type="text" id = "prenom" placeholder="Prénom">
-            <input type="text" id = "tel" placeholder="Numéro de Téléphone">
+        <form id="action_add">
+            <input type="text" name="pseudo" placeholder="Pseudo" required>
+            <input type="password" name="mdp" placeholder="Mot de passe" required>
+            <input type="text" name="nom" placeholder="Nom" required>
+            <input type="text" name="prenom" placeholder="Prénom" required>
+            <input type="text" name="tel" placeholder="Numéro de Téléphone" required>
             <button type="submit" class="btn btn-positive btn-block">Créer</button>
         </form>
+        <a id="redirect_con" class="pad">
+            <button class="btn btn-positive btn-block">Retourner à la page de connexion</button>
+        </a>
         <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
         <script type="text/javascript" src="js/ratchet.js"></script>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="socket.io/socket.io.js"></script>
+        <script type="text/javascript" src="js/socket.io.js"></script>
         <script type="text/javascript" src="js/mustache.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>
