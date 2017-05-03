@@ -24,7 +24,7 @@ SET row_security = off;
 
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
-CREATE EXTANSION postgis;
+CREATE EXTENSION postgis;
 CREATE EXTENSION postgis_topology;
 
 --
@@ -50,15 +50,21 @@ CREATE TABLE utilisateur (
     telephone character varying(15) NOT NULL,
     nom character varying(30) NOT NULL,
     prenom character varying(30) NOT NULL,
-    position character
+    latitude Decimal,
+    longitude Decimal
 );
 
 CREATE TABLE media(
-    idMedia Integer NOT NULL,
-    typeMedia character varying(30) NOT NULL,
-    idEmetteur character NOT NULL,
-    idDestinataire character NOT NULL, 
-    timeout Integer
+    idMedia serial primary key,
+    typeMedia character varying(10) NOT NULL,
+    idEmetteur character varying(15) NOT NULL,
+    idDestinataire character varying(15) NOT NULL,
+    data text NOT NULL,
+    timeout date NOT NULL
+);
+
+CREATE TABLE typeMedia (
+    typeMedia character varying(10) PRIMARY KEY NOT NULL
 );
 
 
@@ -71,14 +77,13 @@ ALTER TABLE ONLY utilisateur
     ADD CONSTRAINT utilisateur_pk PRIMARY KEY (telephone);
 
 ALTER TABLE ONLY media
-    ADD CONSTRAINT media_pk PRIMARY KEY(idMedia, typeMedia);
-
-ALTER TABLE ONLY media
       ADD CONSTRAINT emetteur_fk FOREIGN KEY (idEmetteur) REFERENCES utilisateur(telephone);
 
 ALTER TABLE ONLY media
       ADD CONSTRAINT destinataire_fk FOREIGN KEY (idDestinataire) REFERENCES utilisateur(telephone);
 
+ALTER TABLE ONLY media
+      ADD CONSTRAINT type_media_fk FOREIGN KEY (typeMedia) REFERENCES typeMedia(typeMedia);
 
 --
 -- PostgreSQL database dump complete

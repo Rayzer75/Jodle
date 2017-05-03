@@ -11,16 +11,18 @@
     </head>
     <body>
         <form id="action_add">
-            <input type="text" name="pseudo" placeholder="Pseudo">
-            <input type="password" name="mdp" placeholder="Mot de passe">
-            <input type="text" name="nom" placeholder="Nom">
-            <input type="text" name="prenom" placeholder="Prénom">
-            <input type="text" name="tel" placeholder="Numéro de Téléphone">
+            <input type="text" name="pseudo" placeholder="Pseudo" required>
+            <input type="password" name="mdp" placeholder="Mot de passe" required>
+            <input type="text" name="nom" placeholder="Nom" required>
+            <input type="text" name="prenom" placeholder="Prénom" required>
+            <input type="text" name="tel" placeholder="Numéro de Téléphone" required>
             <button type="submit" class="btn btn-positive btn-block">Créer</button>
         </form>
+        <a id="redirect_con" class="pad">
+            <button class="btn btn-positive btn-block">Retourner à la page de connexion</button>
+        </a>
         <script type="text/javascript" src="js/jquery-3.2.0.min.js"></script>
         <script type="text/javascript" src="js/ratchet.js"></script>
-        <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/socket.io.js"></script>
         <script type="text/javascript" src="js/mustache.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
