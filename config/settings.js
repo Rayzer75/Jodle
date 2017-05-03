@@ -1,15 +1,12 @@
 
 // configuration de la connexion à la base de données
-var user = 'shihf'
+var user = 'shihf';
 
 var settings = {
-
-    host: 'ensibd',
+    host: 'localhost',
     port: 5432,
-    database: user,
-    user: user,
-    password: user
-
+    database: 'test',
+    user: 'francis'
 };
 
 module.exports = {

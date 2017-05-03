@@ -1,31 +1,24 @@
-{{ #pseudo }}
-{{pseudo}}
-{{ /pseudo }}
+<header class="bar bar-nav">
+    <h1 class="title">Mon profil</h1>
+</header>
 
-{{ #nom }}
-{{nom}}
-{{ /nom }}
-
-{{ #prenom }}
-{{prenom}}
-{{ /prenom }}
-
-{{ #telephone }}
-{{telephone}}
-{{ /telephone }}
+<div class="card">
+  <ul class="table-view">
+    <li class="table-view-cell"><strong>Pseudo : </strong>{{ #pseudo }}{{pseudo}}{{ /pseudo }}</li>
+    <li class="table-view-cell"><strong>Nom : </strong>{{ #nom }}{{nom}}{{ /nom }}</li>
+    <li class="table-view-cell"><strong>Prénom : </strong>{{ #prenom }}{{prenom}}{{ /prenom }}</li>
+    <li class="table-view-cell"><strong>Téléphone : </strong>{{ #telephone }}{{telephone}}{{ /telephone }}</li>
+  </ul>
+</div>
 
 <nav class="bar bar-tab">
     <a id="accueil" class="tab-item" href="#">
         <span class="icon icon-home"></span>
         <span class="tab-label">Accueil</span>
     </a>
-    <a id="profil" class="tab-item" href="#">
-        <span class="icon icon-person active"></span>
+    <a id="profil" class="tab-item active" href="#">
+        <span class="icon icon-person"></span>
         <span class="tab-label">Profil</span>
-    </a>
-    <a id="list_contact" class="tab-item" href="#">
-        <span class="icon icon-list"></span>
-        <span class="tab-label">Contacts</span>
     </a>
     <a id="param" class="tab-item" href="#">
         <span class="icon icon-gear"></span>

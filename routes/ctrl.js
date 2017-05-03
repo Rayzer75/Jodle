@@ -5,7 +5,7 @@ var service = require('../services/projet');
 router.get('/user/:id', service.getContactInfo);
 router.get('/user/contacts/:id', service.listContacts);
 router.get('/user/pos/:id', service.getPosition);
-router.get('/user/pos/', service.getDist);
+router.get('/distance/', service.getDist);
 router.put('/user/pos/', service.updatePosition);
 //router.get('/user/media/:type/:id', service.getMedia);
 router.put('/user/', service.updateUser);
