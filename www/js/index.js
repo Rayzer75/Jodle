@@ -17,8 +17,10 @@
  * under the License.
  */
 
-var serverUrl = 'http://129.88.57.99:8080/';
+// renseigner l'adresse du serveur
+var serverUrl = 'http://192.168.0.10:8080/';
 var storage = window.localStorage;
+// décommenter pour supprimer les messages stockés dans le navigateur
 //storage.clear();
 var lastKey = storage.length;
 //var socket = io.connect(serverUrl);
@@ -143,7 +145,8 @@ function updatePosition() {
 /**
  * Fonction qui fait une requête ajax pour inscrire un nouvel utilisateur.
  */
-function inscription() {
+function inscription(e) {
+    e.preventDefault();
     $.ajax({
         url: serverUrl + 'api/user/',
         type: 'POST',
@@ -269,6 +272,9 @@ function getRoom(dest, emit) {
 	return room;
 }
 
+/**
+ * Affiche les messages stockés dans la mémoire du navigateur.
+ */
 function getPreviousMessages() {
 	for (var i = 1; i <= lastKey; i++) {
 		var array = storage.getItem(i).split('-');
@@ -279,6 +285,9 @@ function getPreviousMessages() {
 	}
 }
 
+/**
+ * Retourne un élément 'li' contenant toutes les caractéristiques du message.
+ */
 function buildMessage(sender, type, data) {
 	var message = $('<li class="table-view-cell">').text(sender + ' : ');
 	var media;
@@ -287,7 +296,7 @@ function buildMessage(sender, type, data) {
 			message.text(sender + ' : ' + data);
 			break;
 		case 'image':
-			media = document.createElement('img');
+		media = document.createElement('img');
 			media.src = data;
 			media.style.maxWidth = '100%';
 			message.append(media);
@@ -310,13 +319,13 @@ function buildMessage(sender, type, data) {
 }
 
 /**
- * Permet juste de faire des tests sur chrome, le laisser activer avec l'emulateur
+ * Permet juste de faire des tests sur chrome, le laisser activé avec l'emulateur
  * peut creer des redondances
  */
  $("document").ready(function () {
 //    getPreviousMessages();
 //    enableChat();
-//    $("#action_add").bind("submit", inscription);
+    $("#action_add").bind("submit", inscription);
 //    $("#redirec_register").bind("click", redirecRegister);
 //    $("#contacts_list").bind("click", onSuccessContactsList);
 //    $("#connect").bind("submit", connection);
@@ -338,8 +347,7 @@ function buildMessage(sender, type, data) {
  * @param {type} contacts
  */
 function onSuccessContactsList(contacts) {
-//	for (var i = 0; i < contacts.length; i++) {
-	for (var i = contacts.length-1; i > contacts.length-5; i--) { // pour les besoins de la démo
+	for (var i = 0; i < contacts.length; i++) {
 		var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
 		console.log(phoneNumber);
 		// Calcule la distance entre l'utilisateur et ses contacts
@@ -420,7 +428,8 @@ function delete_account(e) {
 /**
  * Permet de mettre à jour le compte de l'utilisateur
  */
-function update_account() {
+function update_account(e) {
+    e.preventDefault();
     $.ajax({
         url: serverUrl + 'api/user/',
         type: 'PUT',
@@ -585,8 +594,6 @@ var app = {
 		$("#redirect_con").bind("click", redirectConnect);
 		// Retourner a la page de connexion apres creation de compte
 		$("#redirect_regis").bind("click", redirectConnect);
-//        getPreviousMessages();
-//        enableChat();
 		// Retourner la page des paramètres
 		//$("#param").bind("click", showParam);
 		// Boutton de deconnexion

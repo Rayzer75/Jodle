@@ -46,6 +46,7 @@ server.listen(8080); // démarrage du serveur sur le port 8080
 
 console.log("Serveur démarré sur le port 8080");
 
+// utile seulement pour les tests sur navigateur
 app.get('/chat', function (req, res) {
     res.sendFile(__dirname + '/www/chat.html');
 });
@@ -61,11 +62,8 @@ app.get('/index', function (req, res) {
     res.sendFile(__dirname + '/www/index.html');
 });
 
-app.get('/index', function (req, res) {
-    res.sendFile(__dirname + '/www/index.html');
-});
-
 io.on('connection', function (socket) {
+    // évenement declenché si un utilisateur rentre un message
     socket.on('chat message', function (msg) {
         if (io.sockets.adapter.rooms[msg.room].length < 2) { // s'il n'y a qu'une personne dans la salle, on enregistre dans la bdd
             timeout = app_services.getTimeout();
@@ -75,7 +73,7 @@ io.on('connection', function (socket) {
         console.log('message in room : ' + msg.room);
         io.to(msg.room).emit('chat message', msg);
     });
-
+    // évenement déclenché lorsqu'un utilisateur se connecte
     socket.on('is connected', function (user) {
         app_services.getAllMedias(user.emit, user.dest, function(data) {
             var length = data.length;
@@ -89,7 +87,7 @@ io.on('connection', function (socket) {
         });
         app_services.deleteExpiredMedias();
     });
-    
+    // évenement permettant de placer un utilisateur dans une room
     socket.on('room', function(room) {
         socket.join(room);
     });

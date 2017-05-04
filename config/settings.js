@@ -7,7 +7,7 @@ var settings = {
     port: 5432,
     database: user,
     user: user,
-	password: user
+    password: user
 };
 
 module.exports = {
