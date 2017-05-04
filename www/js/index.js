@@ -23,16 +23,28 @@ var storage = window.localStorage;
 var lastKey = storage.length;
 //var socket = io.connect(serverUrl);
 var socket;
+// On conserve en variable globale le telephone et la position de l'utilisateur qui
+// se connecte
 var telephoneGlob;
 var longitudeGlob;
 var latitudeGlob;
 var USER_INFO;
 var DISTANCE = null;
 
+/**
+ * Permet de rediriger vers la page de connexion si celle-ci echoue. Nous avons choisi
+ * de na pas utiliser mustache avant la connexion.
+ */
 function redirectConnect() {
     window.location.href = 'index.html';
 }
 
+/**
+ * Fonction qui gère la connection à un compte utilisateur. Lors de la connexion, 
+ * Un appel est fait pour afficher le menu et mettre à jour la postion de l'utilisateur
+ * qui se connecte.
+ * @param {type} e
+ */
 function connection(e) {
     // Garde le numero de telephone pour supprimer
     telephoneGlob = e.target.telephone.value;
@@ -43,23 +55,33 @@ function connection(e) {
         data: $(this).serialize(),
         contentType: 'application/x-www-form-urlencoded',
         success: function (code, statut) {
-            showMenu();
-            navigator.geolocation.getCurrentPosition(sendLocation, errorLocation, {timeout: 10000}, {enableHighAccuracy: true});
+            showMenu(); // Affiche le menu si la connexion reussie
+            // cherche et met à jour dans la base de données la position de l'utilisateur,
+            // qui se connecte
+            navigator.geolocation.getCurrentPosition(sendLocation, errorLocation,
+            {timeout: 10000}, {enableHighAccuracy: true});
         },
         error: function (code, statut) {
-            $('#content').empty().html(code);
+            // Renvoie les pages d'erreurs si la connexion echoue
+            $('#content').empty().html(code); // content permet de vider et de modifier
+            // les pages html avec les mustaches.
             $("#connect_page").bind("click", redirectConnect);
         }
     });
     e.preventDefault();
 }
 
+/**
+ * Cette fonction affiche le menu qui sera afficher quand l(utilisateur se connecte.
+ */
 function showMenu() {
     $.get(serverUrl + 'api/user/', USER_INFO, function (code, statut) {
         $('#content').empty().html(code);
         $("#connect_page").bind("click", redirectConnect);
         // contient les boutons du menu
         bindButton();
+        // Lorsqu'on affiche le menu, on affiche aussi la liste des contacts selon
+        // leur disponibilité
         getContactsList();
     });
 
@@ -67,30 +89,35 @@ function showMenu() {
 
 // https://www.dataiku.com/learn/guide/other/geo/convert-coordinates-with-PostGIS.html
 // http://www.postgis.org/docs/ST_Distance.html
-// Fonction pour obtenir la latitude et la longitude de la personne
+/**
+ * Fonction pour obtenir la latitude et la longitude de la personne
+ * @param {type} position
+ */ 
 function sendLocation(position) {
     latitudeGlob = position.coords.latitude;
     longitudeGlob = position.coords.longitude;
 
     // Met a jour sa position à chaque connexion à l'application
     updatePosition();
-    // getPosition(2543);
-
-    //console.log(latitudeGlob);
-    //console.log(longitudeGlob);
-    //console.log(`More or less ${position.coords.accuracy} meters.`);
 }
 
+/**
+ * 2. position unavailable
+ *  3. time out
+ * Fonction qui renvoie le type d'erreur de la recherche de position
+ * @param {type} error
+ */
 function errorLocation(error) {
     if (error.code == error.PERMISSION_DENIED) {
         console.log("you denied me :-(");
     } else {
-        // 2. position unavailable
-        // 3. time out
         console.log(error.code);
     }
 }
 
+/**
+ * Met à jour dans la base de données la position de l'utilisateur qui se connecte.?
+ */
 function updatePosition() {
     console.log(telephoneGlob);
     console.log(longitudeGlob);
@@ -111,22 +138,30 @@ function updatePosition() {
     });
 }
 
-function inscription(e) {
+/**
+ * Fonction qui fait une requête ajax pour inscrire un nouvel utilisateur.
+ */
+function inscription() {
     $.ajax({
         url: serverUrl + 'api/user/',
         type: 'POST',
         data: $(this).serialize(),
         contentType: 'application/x-www-form-urlencoded',
         success: function (code, statut) {
+            // Redirige vers la page de confirmation
             window.location.href = 'registerVal.html';
         },
         error: function (code, statut) {
+            // Envoie une erreur si l'inscription n'est pas possible
             window.location.href = 'errorPseudo.html';
         }
     });
-    e.preventDefault();
 }
 
+/**
+ * Cherche les contacts de l'utilisateur dans son telephone. La fonction onSuccess comparera
+ * avec la base de données pour afficher ses contacts dans l'application
+ */
 function getContactsList() {
     var options = new ContactFindOptions();
     options.filter = "";
@@ -136,10 +171,16 @@ function getContactsList() {
     navigator.contacts.find(filter, onSuccessContactsList, onErrorContactsList, options);
 }
 
+/**
+ * Redirige vers la page d'inscription
+ */
 function redirecRegister() {
     window.location.href = 'register.html';
 }
 
+/**
+ * Active le chat
+ */
 function enableChat() {
     socket = io.connect(serverUrl);
     var emit = telephoneGlob;
@@ -265,30 +306,37 @@ function buildMessage(sender, type, data) {
     return message;
 }
 
-// $("document").ready(function () {
-//    getPreviousMessages();
-//    enableChat();
-//    $("#action_add").bind("submit", inscription);
-//    $("#redirec_register").bind("click", redirecRegister);
-//    $("#contacts_list").bind("click", onSuccessContactsList);
-//    $("#connect").bind("submit", connection);
-//    $("#connect_page").bind("click", redirectConnect);
-//    $("#redirec_reg").bind("click", redirecRegister);
-//    $("#redirect_con").bind("click", redirectConnect);
-//    $("#param").bind("click", showParam);
-//    $("#delete").bind("click", delete_account);
-//    $("#deconnecter").bind("click", redirectConnect);
-//    $("#redirect_regis").bind("click", redirectConnect);
-//    $("#profil").bind("click", showProfil);
-//	$("#contacts_list").bind("click", showMenu);
-// });
+/**
+ * Permet juste de faire des tests sur chrome, le laisser activer avec l'emulateur
+ * peut creer des redondances
+ */
+ $("document").ready(function () {
+    getPreviousMessages();
+    enableChat();
+    $("#action_add").bind("submit", inscription);
+    $("#redirec_register").bind("click", redirecRegister);
+    $("#contacts_list").bind("click", onSuccessContactsList);
+    $("#connect").bind("submit", connection);
+    $("#connect_page").bind("click", redirectConnect);
+    $("#redirec_reg").bind("click", redirecRegister);
+    $("#redirect_con").bind("click", redirectConnect);
+    $("#param").bind("click", showParam);
+    $("#delete").bind("click", delete_account);
+    $("#deconnecter").bind("click", redirectConnect);
+    $("#redirect_regis").bind("click", redirectConnect);
+    $("#profil").bind("click", showProfil);
+	$("#contacts_list").bind("click", showMenu);
+ });
 
 
+/**
+ * Permet de comparer les contacts du telephone et la base de données. Puis affiche
+ * selon la distance les contacts de l'utilisateurs
+ * @param {type} contacts
+ */
 function onSuccessContactsList(contacts) {
     for (var i = 0; i < contacts.length; i++) {
         var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
-        console.log(phoneNumber);
-        // Calcule la distance entre l'utilisateur et ses contacts
 
         $.when(
 //                getPosition(phoneNumber)
@@ -306,6 +354,10 @@ function onSuccessContactsList(contacts) {
     }
 }
 
+/**
+ * Fonction qui permet d'afficher le chat
+ * @param {type} e
+ */
 function showChat(e) {
     data = e.data;
     console.log("chat data : " + data.telephone);
@@ -318,7 +370,12 @@ function showChat(e) {
     });
 }
 
-// permet d'éliminer le formattage américain des numéros de tel
+/**
+ * permet d'éliminer le formattage américain des numéros de tel
+ * @param {type} telephone
+ * @returns {undefined}
+ * 
+ */
 function phoneNumberParser(originalPhoneNumber) {
     var phoneNumber = originalPhoneNumber;
     // supprime tous les ' ', '-', '(', ')'
@@ -334,6 +391,10 @@ function onErrorContactsList(contactError) {
     alert('onError!');
 }
 
+/**
+ * Fait une requête ajax pour supprimer un compte
+ * @param {type} e
+ */
 function delete_account(e) {
     $.ajax({
         url: serverUrl + 'api/user/',
@@ -342,7 +403,6 @@ function delete_account(e) {
             "telephone": telephoneGlob
         },
         success: function (code, statut) {
-            // TODO : Faire une page de validation de suppression
             redirectConnect();
         },
         error: function (code, statut) {
@@ -352,6 +412,9 @@ function delete_account(e) {
     e.preventDefault();
 }
 
+/**
+ * Permet de mettre à jour le compte de l'utilisateur
+ */
 function update_account() {
     $.ajax({
         url: serverUrl + 'api/user/',
@@ -363,7 +426,6 @@ function update_account() {
             "mdp": e.target.mdp.value
         },
         success: function (code, statut) {
-            // TODO : Faire une page de validation de mise à jour
             redirectConnect();
         },
         error: function (code, statut) {
@@ -372,6 +434,9 @@ function update_account() {
     });
 }
 
+/**
+ * Permet d'afficher les parametres du compte de l'utilisateur
+ */
 function showParam() {
     $.ajax({
         url: serverUrl + 'api/parameters/',
@@ -394,6 +459,9 @@ function showParam() {
 
 }
 
+/**
+ * Affiche le menu
+ */
 function showIndex() {
     $.ajax({
         url: serverUrl + 'api/menu/',
@@ -408,6 +476,9 @@ function showIndex() {
     });
 }
 
+/**
+ * Affiche le profil de l'utilisateur
+ */
 function showProfil() {
     $.ajax({
         url: serverUrl + 'api/profil/',
@@ -416,6 +487,7 @@ function showProfil() {
             "telephone": telephoneGlob
         },
         success: function (code, statut) {
+            // TODO : faire une présentation html
             $('#content').empty().html(code);
             bindButton();
         },
@@ -427,6 +499,7 @@ function showProfil() {
 
 /**
  * Retourne la position : la longitude et la latitude d'une personne
+ * La position fait appel à getDIstance
  * @param {type} telephone
  */
 function getPosition(telephone) {
