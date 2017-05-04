@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var serverUrl = 'http://129.88.242.129:8080/';
+var serverUrl = 'http://192.168.0.10:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
@@ -26,6 +26,8 @@ var socket;
 var telephoneGlob;
 var longitudeGlob;
 var latitudeGlob;
+var USER_INFO;
+var DISTANCE = null;
 
 function redirectConnect() {
     window.location.href = 'index.html';
@@ -34,17 +36,14 @@ function redirectConnect() {
 function connection(e) {
     // Garde le numero de telephone pour supprimer
     telephoneGlob = e.target.telephone.value;
+    USER_INFO = $(this).serialize();
     $.ajax({
         url: serverUrl + 'api/user/',
         type: 'GET',
         data: $(this).serialize(),
         contentType: 'application/x-www-form-urlencoded',
         success: function (code, statut) {
-            $('#content').empty().html(code);
-            $("#connect_page").bind("click", redirectConnect);
-            // contient les boutons du menu
-            bindButton();
-            getContactsList();
+            showMenu();
             navigator.geolocation.getCurrentPosition(sendLocation, errorLocation, {timeout: 10000}, {enableHighAccuracy: true});
         },
         error: function (code, statut) {
@@ -53,6 +52,17 @@ function connection(e) {
         }
     });
     e.preventDefault();
+}
+
+function showMenu() {
+    $.get(serverUrl + 'api/user/', USER_INFO, function (code, statut) {
+        $('#content').empty().html(code);
+        $("#connect_page").bind("click", redirectConnect);
+        // contient les boutons du menu
+        bindButton();
+        getContactsList();
+    });
+
 }
 
 // https://www.dataiku.com/learn/guide/other/geo/convert-coordinates-with-PostGIS.html
@@ -64,7 +74,7 @@ function sendLocation(position) {
 
     // Met a jour sa position à chaque connexion à l'application
     updatePosition();
-   // getPosition(2543);
+    // getPosition(2543);
 
     //console.log(latitudeGlob);
     //console.log(longitudeGlob);
@@ -194,7 +204,7 @@ function enableChat() {
     });
     socket.emit('room', getRoom(emit, dest));
     // le destinataire a-t-il émis des messages ?
-    socket.emit('is connected', {emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text(), room: getRoom(emit, dest)}); 
+    socket.emit('is connected', {emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text(), room: getRoom(emit, dest)});
     socket.on('new message', function (msg) {
         var message = buildMessage(msg.sender, msg.type, msg.data);
         lastKey++;
@@ -266,28 +276,33 @@ function buildMessage(sender, type, data) {
 //    $("#redirec_reg").bind("click", redirecRegister);
 //    $("#redirect_con").bind("click", redirectConnect);
 //    $("#param").bind("click", showParam);
-//    $("#contacts_list").bind("click", getContactsList);
 //    $("#delete").bind("click", delete_account);
 //    $("#deconnecter").bind("click", redirectConnect);
 //    $("#redirect_regis").bind("click", redirectConnect);
 //    $("#profil").bind("click", showProfil);
+//	$("#contacts_list").bind("click", showMenu);
 // });
- 
+
 
 function onSuccessContactsList(contacts) {
     for (var i = 0; i < contacts.length; i++) {
         var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
         console.log(phoneNumber);
         // Calcule la distance entre l'utilisateur et ses contacts
-        //getPosition(phoneNumber);
-        $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
-            $('#contacts-dispo').after(data);
-            $.get(serverUrl + 'api/user/' + phoneNumber, function (data) {
-            var room = getRoom(telephoneGlob, data.telephone);
-            $('#' + room).click(data, showChat);
-            $('#contacts_list').click(getContactsList);
-        });
-        });
+
+        $.when(
+//                getPosition(phoneNumber)
+//                ).then(
+                $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
+
+                        $('#contacts-dispo').after(data);
+
+                })
+                ).then(
+                $.get(serverUrl + 'api/user/' + phoneNumber, function (data) {
+                    var room = getRoom(telephoneGlob, data.telephone);
+                    $('#' + room).click(data, showChat);
+                }));
     }
 }
 
@@ -299,6 +314,7 @@ function showChat(e) {
         $('#content').empty().html(data);
         enableChat();
         getPreviousMessages();
+        $("#contacts_list").bind("click", showMenu);
     });
 }
 
@@ -414,21 +430,27 @@ function showProfil() {
  * @param {type} telephone
  */
 function getPosition(telephone) {
+    var longitude;
+    var latitude;
+    $.when(
     $.ajax({
         url: serverUrl + 'api/user/pos/' + telephone,
         type: 'GET',
         success: function (code, statut) {
             // return latitude et longitude
-            
-            console.log(code.longitude);
-            console.log(code.latitude);
+
+            longitude = code.longitude;
+            latitude = code.latitude;
             console.log(code);
-            getDistance(longitudeGlob, latitudeGlob, code.longitude, code.latitude);
+//            getDistance(longitudeGlob, latitudeGlob, code.longitude, code.latitude);
         },
-        error: function(code, statut) {
+        error: function (code, statut) {
             console.log(code);
         }
-    });
+    })
+    ).then(
+        getDistance(longitudeGlob, latitudeGlob, longitude, latitude)
+    )
 }
 
 /**
@@ -451,9 +473,9 @@ function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
         success: function (code, statut) {
             // la distance entre 2 utilisateurs
             console.log(code.dist);
-            $('#contacts-dispo').after("<li><label>Distance : </label>" + code.dist + "</li>");
+            DISTANCE = code.dist;
         },
-        error: function(code, statut) {
+        error: function (code, statut) {
             console.log(code);
         }
     });
@@ -462,10 +484,9 @@ function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
 // Avoir les boutons du menu fonctionnel (A appeler)
 function bindButton() {
     $("#param").bind("click", showParam);
-    $("#accueil").bind("click", showIndex);
+    $("#accueil").bind("click", showMenu);
     $("#profil").bind("click", showProfil);
-    // TODO
-    //$("#list_contact").bind("click", );
+
 }
 
 var app = {
@@ -473,7 +494,6 @@ var app = {
     initialize: function () {
         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
     },
-
     onDeviceReady: function () {
         console.log("console.log works well");
         // action_add (id pour s'inscrire avec le formulaire) (soumission)
@@ -488,7 +508,6 @@ var app = {
         $("#redirect_con").bind("click", redirectConnect);
         // Retourner a la page de connexion apres creation de compte
         $("#redirect_regis").bind("click", redirectConnect);
-        $("#contacts_list").bind("click", getContactsList);
 //        getPreviousMessages();
 //        enableChat();
         // Retourner la page des paramètres

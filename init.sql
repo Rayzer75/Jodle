@@ -85,6 +85,11 @@ ALTER TABLE ONLY media
 ALTER TABLE ONLY media
       ADD CONSTRAINT type_media_fk FOREIGN KEY (typeMedia) REFERENCES typeMedia(typeMedia);
 
+INSERT INTO typemedia VALUES('text');
+INSERT INTO typemedia VALUES('audio');
+INSERT INTO typemedia VALUES('image');
+INSERT INTO typemedia VALUES('video');
+
 --
 -- PostgreSQL database dump complete
 --
