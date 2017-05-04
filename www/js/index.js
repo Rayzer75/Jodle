@@ -314,21 +314,21 @@ function buildMessage(sender, type, data) {
  * peut creer des redondances
  */
  $("document").ready(function () {
-    getPreviousMessages();
-    enableChat();
-    $("#action_add").bind("submit", inscription);
-    $("#redirec_register").bind("click", redirecRegister);
-    $("#contacts_list").bind("click", onSuccessContactsList);
-    $("#connect").bind("submit", connection);
-    $("#connect_page").bind("click", redirectConnect);
-    $("#redirec_reg").bind("click", redirecRegister);
+//    getPreviousMessages();
+//    enableChat();
+//    $("#action_add").bind("submit", inscription);
+//    $("#redirec_register").bind("click", redirecRegister);
+//    $("#contacts_list").bind("click", onSuccessContactsList);
+//    $("#connect").bind("submit", connection);
+//    $("#connect_page").bind("click", redirectConnect);
+//    $("#redirec_reg").bind("click", redirecRegister);
     $("#redirect_con").bind("click", redirectConnect);
-    $("#param").bind("click", showParam);
-    $("#delete").bind("click", delete_account);
-    $("#deconnecter").bind("click", redirectConnect);
-    $("#redirect_regis").bind("click", redirectConnect);
-    $("#profil").bind("click", showProfil);
-	$("#contacts_list").bind("click", showMenu);
+//    $("#param").bind("click", showParam);
+//    $("#delete").bind("click", delete_account);
+//    $("#deconnecter").bind("click", redirectConnect);
+//    $("#redirect_regis").bind("click", redirectConnect);
+//    $("#profil").bind("click", showProfil);
+//	$("#contacts_list").bind("click", showMenu);
  });
 
 
