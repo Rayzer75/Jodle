@@ -17,7 +17,7 @@
  * under the License.
  */
 
-var serverUrl = 'http://192.168.0.10:8080/';
+var serverUrl = 'http://129.88.57.99:8080/';
 var storage = window.localStorage;
 //storage.clear();
 var lastKey = storage.length;
