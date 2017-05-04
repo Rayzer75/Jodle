@@ -530,7 +530,6 @@ function getPosition(telephone) {
  * Fonction qui retourne la distance entre l'utilisateur et un de ses contacts
  * @param {type} longitude de l'utilisateur
  * @param {type} latitude de l'utilisatuer
- * @returns {undefined}
  */
 function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
     console.log("RENTRE");
