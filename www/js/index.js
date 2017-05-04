@@ -36,7 +36,7 @@ var DISTANCE = null;
  * de na pas utiliser mustache avant la connexion.
  */
 function redirectConnect() {
-    window.location.href = 'index.html';
+	window.location.href = 'index.html';
 }
 
 /**
@@ -94,11 +94,12 @@ function showMenu() {
  * @param {type} position
  */ 
 function sendLocation(position) {
-    latitudeGlob = position.coords.latitude;
-    longitudeGlob = position.coords.longitude;
-
+	latitudeGlob = position.coords.latitude;
+	longitudeGlob = position.coords.longitude;
+	
     // Met a jour sa position à chaque connexion à l'application
     updatePosition();
+
 }
 
 /**
@@ -119,24 +120,25 @@ function errorLocation(error) {
  * Met à jour dans la base de données la position de l'utilisateur qui se connecte.?
  */
 function updatePosition() {
-    console.log(telephoneGlob);
-    console.log(longitudeGlob);
-    $.ajax({
-        url: serverUrl + 'api/user/pos/',
-        type: 'PUT',
-        data: {
-            "telephoneG": telephoneGlob,
-            "longitudeG": longitudeGlob,
-            "latitudeG": latitudeGlob
-        },
-        success: function (code, statut) {
-            console.log(code);
-        },
-        error: function (code, statut) {
-            console.log(code);
-        }
-    });
+	console.log(telephoneGlob);
+	console.log(longitudeGlob);
+	$.ajax({
+		url: serverUrl + 'api/user/pos/',
+		type: 'PUT',
+		data: {
+			"telephoneG": telephoneGlob,
+			"longitudeG": longitudeGlob,
+			"latitudeG": latitudeGlob
+		},
+		success: function (code, statut) {
+			console.log(code);
+		},
+		error: function (code, statut) {
+			console.log(code);
+		}
+	});
 }
+
 
 /**
  * Fonction qui fait une requête ajax pour inscrire un nouvel utilisateur.
@@ -156,6 +158,7 @@ function inscription() {
             window.location.href = 'errorPseudo.html';
         }
     });
+
 }
 
 /**
@@ -163,147 +166,147 @@ function inscription() {
  * avec la base de données pour afficher ses contacts dans l'application
  */
 function getContactsList() {
-    var options = new ContactFindOptions();
-    options.filter = "";
-    options.multiple = true;
-    options.hasPhoneNumber = true;
-    filter = ["name", "phoneNumbers"];
-    navigator.contacts.find(filter, onSuccessContactsList, onErrorContactsList, options);
+	var options = new ContactFindOptions();
+	options.filter = "";
+	options.multiple = true;
+	options.hasPhoneNumber = true;
+	filter = ["name", "phoneNumbers"];
+	navigator.contacts.find(filter, onSuccessContactsList, onErrorContactsList, options);
 }
 
 /**
  * Redirige vers la page d'inscription
  */
 function redirecRegister() {
-    window.location.href = 'register.html';
+	window.location.href = 'register.html';
 }
 
 /**
  * Active le chat
  */
 function enableChat() {
-    socket = io.connect(serverUrl);
-    var emit = telephoneGlob;
-    var dest = $('#dest').text();
-    $('#inputFileToLoad').change(function () {
-        var filesSelected = document.getElementById("inputFileToLoad").files;
-        if (filesSelected.length > 0) {
-            var fileToLoad = filesSelected[0];
-            var fileReader = new FileReader();
-            fileReader.onload = function (fileLoadedEvent) {
-                var srcData = fileLoadedEvent.target.result; // <--- data: base64
-                var typeMedia;
-                switch (fileToLoad.type.split('/')[0]) {
-                    case 'image':
-                        typeMedia = 'image';
-                        break;
-                    case 'audio':
-                        typeMedia = 'audio';
-                        break;
-                    case 'video':
-                        typeMedia = 'video';
-                        break;
-                    default:
-                        alert("Fichier non pris en charge !");
-                        break;
-                }
-                socket.emit('chat message', {sender: $('#myPseudo').text(),
-                    type: typeMedia,
-                    data: srcData,
-                    emit: emit,
-                    dest: dest,
-                    room: getRoom(emit, dest)
-                }
-                );
-            };
-            fileReader.readAsDataURL(fileToLoad);
-        }
-    });
-    $('#chat').submit(function (e) {
-        e.preventDefault();
-        socket.emit('chat message', {sender: $('#myPseudo').text(),
-            type: 'text',
-            data: $('#m').val(),
-            emit: $('#emit').text(),
-            dest: $('#dest').text(),
-            room: getRoom($('#dest').text(), $('#emit').text())
-        });
-        $('#m').val('');
-        return false;
-    });
-    socket.on('chat message', function (msg) {
-        var message = buildMessage(msg.sender, msg.type, msg.data);
-        lastKey++;
-        storage.setItem(lastKey, msg.sender + '-' + msg.type + '-' + msg.data);
-        $('#messages').append(message);
-        $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
-    });
-    socket.on('server message', function (msg) {
-        var message = buildMessage(msg.sender, msg.type, msg.data);
-        $('#messages').append(message);
-        $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
-    });
-    socket.emit('room', getRoom(emit, dest));
-    // le destinataire a-t-il émis des messages ?
-    socket.emit('is connected', {emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text(), room: getRoom(emit, dest)});
-    socket.on('new message', function (msg) {
-        var message = buildMessage(msg.sender, msg.type, msg.data);
-        lastKey++;
-        storage.setItem(lastKey, msg.sender + '-' + msg.type + '-' + msg.data);
-        $('#messages').append(message);
-        $('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
-    });
+	socket = io.connect(serverUrl);
+	var emit = telephoneGlob;
+	var dest = $('#dest').text();
+	$('#inputFileToLoad').change(function () {
+		var filesSelected = document.getElementById("inputFileToLoad").files;
+		if (filesSelected.length > 0) {
+			var fileToLoad = filesSelected[0];
+			var fileReader = new FileReader();
+			fileReader.onload = function (fileLoadedEvent) {
+				var srcData = fileLoadedEvent.target.result; // <--- data: base64
+				var typeMedia;
+				switch (fileToLoad.type.split('/')[0]) {
+					case 'image':
+						typeMedia = 'image';
+						break;
+					case 'audio':
+						typeMedia = 'audio';
+						break;
+					case 'video':
+						typeMedia = 'video';
+						break;
+					default:
+						alert("Fichier non pris en charge !");
+						break;
+				}
+				socket.emit('chat message', {sender: $('#myPseudo').text(),
+					type: typeMedia,
+					data: srcData,
+					emit: emit,
+					dest: dest,
+					room: getRoom(emit, dest)
+				}
+				);
+			};
+			fileReader.readAsDataURL(fileToLoad);
+		}
+	});
+	$('#chat').submit(function (e) {
+		e.preventDefault();
+		socket.emit('chat message', {sender: $('#myPseudo').text(),
+			type: 'text',
+			data: $('#m').val(),
+			emit: $('#emit').text(),
+			dest: $('#dest').text(),
+			room: getRoom($('#dest').text(), $('#emit').text())
+		});
+		$('#m').val('');
+		return false;
+	});
+	socket.on('chat message', function (msg) {
+		var message = buildMessage(msg.sender, msg.type, msg.data);
+		lastKey++;
+		storage.setItem(lastKey, msg.sender + '-' + msg.type + '-' + msg.data);
+		$('#messages').append(message);
+		$('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
+	});
+	socket.on('server message', function (msg) {
+		var message = buildMessage(msg.sender, msg.type, msg.data);
+		$('#messages').append(message);
+		$('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
+	});
+	socket.emit('room', getRoom(emit, dest));
+	// le destinataire a-t-il émis des messages ?
+	socket.emit('is connected', {emit: $('#dest').text(), dest: $('#emit').text(), sender: $('#otherPseudo').text(), room: getRoom(emit, dest)});
+	socket.on('new message', function (msg) {
+		var message = buildMessage(msg.sender, msg.type, msg.data);
+		lastKey++;
+		storage.setItem(lastKey, msg.sender + '-' + msg.type + '-' + msg.data);
+		$('#messages').append(message);
+		$('#messages').animate({scrollTop: $('#messages').prop("scrollHeight")}, 500);
+	});
 }
 
 // le nom d'une room est de la forme 'TEL1-TEL2' où TEL1 < TEL2
 function getRoom(dest, emit) {
-    var room;
-    if (dest < emit) {
-        room = dest + '-' + emit;
-    } else {
-        room = emit + '-' + dest;
-    }
-    return room;
+	var room;
+	if (dest < emit) {
+		room = dest + '-' + emit;
+	} else {
+		room = emit + '-' + dest;
+	}
+	return room;
 }
 
 function getPreviousMessages() {
-    for (var i = 1; i <= lastKey; i++) {
-        var array = storage.getItem(i).split('-');
-        var sender = array[0];
-        var type = array[1];
-        var data = array[2];
-        $('#messages').append(buildMessage(sender, type, data));
-    }
+	for (var i = 1; i <= lastKey; i++) {
+		var array = storage.getItem(i).split('-');
+		var sender = array[0];
+		var type = array[1];
+		var data = array[2];
+		$('#messages').append(buildMessage(sender, type, data));
+	}
 }
 
 function buildMessage(sender, type, data) {
-    var message = $('<li class="table-view-cell">').text(sender + ' : ');
-    var media;
-    switch (type) {
-        case 'text':
-            message.text(sender + ' : ' + data);
-            break;
-        case 'image':
-            media = document.createElement('img');
-            media.src = data;
-            media.style.maxWidth = '100%';
-            message.append(media);
-            break;
-        case 'audio':
-            media = document.createElement('audio');
-            media.src = data;
-            media.controls = 'controls';
-            message.append(media);
-            break;
-        case 'video':
-            media = document.createElement('video');
-            media.src = data;
-            media.controls = 'video';
-            media.style.maxWidth = '100%';
-            message.append(media);
-            break;
-    }
-    return message;
+	var message = $('<li class="table-view-cell">').text(sender + ' : ');
+	var media;
+	switch (type) {
+		case 'text':
+			message.text(sender + ' : ' + data);
+			break;
+		case 'image':
+			media = document.createElement('img');
+			media.src = data;
+			media.style.maxWidth = '100%';
+			message.append(media);
+			break;
+		case 'audio':
+			media = document.createElement('audio');
+			media.src = data;
+			media.controls = 'controls';
+			message.append(media);
+			break;
+		case 'video':
+			media = document.createElement('video');
+			media.src = data;
+			media.controls = 'video';
+			media.style.maxWidth = '100%';
+			message.append(media);
+			break;
+	}
+	return message;
 }
 
 /**
@@ -311,21 +314,21 @@ function buildMessage(sender, type, data) {
  * peut creer des redondances
  */
  $("document").ready(function () {
-    getPreviousMessages();
-    enableChat();
-    $("#action_add").bind("submit", inscription);
-    $("#redirec_register").bind("click", redirecRegister);
-    $("#contacts_list").bind("click", onSuccessContactsList);
-    $("#connect").bind("submit", connection);
-    $("#connect_page").bind("click", redirectConnect);
-    $("#redirec_reg").bind("click", redirecRegister);
+//    getPreviousMessages();
+//    enableChat();
+//    $("#action_add").bind("submit", inscription);
+//    $("#redirec_register").bind("click", redirecRegister);
+//    $("#contacts_list").bind("click", onSuccessContactsList);
+//    $("#connect").bind("submit", connection);
+//    $("#connect_page").bind("click", redirectConnect);
+//    $("#redirec_reg").bind("click", redirecRegister);
     $("#redirect_con").bind("click", redirectConnect);
-    $("#param").bind("click", showParam);
-    $("#delete").bind("click", delete_account);
-    $("#deconnecter").bind("click", redirectConnect);
-    $("#redirect_regis").bind("click", redirectConnect);
-    $("#profil").bind("click", showProfil);
-	$("#contacts_list").bind("click", showMenu);
+//    $("#param").bind("click", showParam);
+//    $("#delete").bind("click", delete_account);
+//    $("#deconnecter").bind("click", redirectConnect);
+//    $("#redirect_regis").bind("click", redirectConnect);
+//    $("#profil").bind("click", showProfil);
+//	$("#contacts_list").bind("click", showMenu);
  });
 
 
@@ -335,23 +338,25 @@ function buildMessage(sender, type, data) {
  * @param {type} contacts
  */
 function onSuccessContactsList(contacts) {
-    for (var i = 0; i < contacts.length; i++) {
-        var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
-
-        $.when(
+//	for (var i = 0; i < contacts.length; i++) {
+	for (var i = contacts.length-1; i > contacts.length-5; i--) { // pour les besoins de la démo
+		var phoneNumber = phoneNumberParser(contacts[i].phoneNumbers[0].value);
+		console.log(phoneNumber);
+		// Calcule la distance entre l'utilisateur et ses contacts
+		$.when(
 //                getPosition(phoneNumber)
 //                ).then(
-                $.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
+				$.get(serverUrl + 'api/user/contacts/' + phoneNumber, function (data) {
 
-                        $('#contacts-dispo').after(data);
+					$('#contacts-dispo').after(data);
 
-                })
-                ).then(
-                $.get(serverUrl + 'api/user/' + phoneNumber, function (data) {
-                    var room = getRoom(telephoneGlob, data.telephone);
-                    $('#' + room).click(data, showChat);
-                }));
-    }
+				})
+				).then(
+				$.get(serverUrl + 'api/user/' + phoneNumber, function (data) {
+					var room = getRoom(telephoneGlob, data.telephone);
+					$('#' + room).click(data, showChat);
+				}));
+	}
 }
 
 /**
@@ -359,15 +364,15 @@ function onSuccessContactsList(contacts) {
  * @param {type} e
  */
 function showChat(e) {
-    data = e.data;
-    console.log("chat data : " + data.telephone);
-    console.log("chat data : " + data.pseudo);
-    $.get(serverUrl + 'api/chat/', data, function (data) {
-        $('#content').empty().html(data);
-        enableChat();
-        getPreviousMessages();
-        $("#contacts_list").bind("click", showMenu);
-    });
+	data = e.data;
+	console.log("chat data : " + data.telephone);
+	console.log("chat data : " + data.pseudo);
+	$.get(serverUrl + 'api/chat/', data, function (data) {
+		$('#content').empty().html(data);
+		enableChat();
+		getPreviousMessages();
+		$("#contacts_list").bind("click", showMenu);
+	});
 }
 
 /**
@@ -377,18 +382,18 @@ function showChat(e) {
  * 
  */
 function phoneNumberParser(originalPhoneNumber) {
-    var phoneNumber = originalPhoneNumber;
-    // supprime tous les ' ', '-', '(', ')'
-    phoneNumber = phoneNumber.replace(/ /g, '');
-    phoneNumber = phoneNumber.replace(/-/g, '');
-    phoneNumber = phoneNumber.replace('(', '');
-    phoneNumber = phoneNumber.replace(')', '');
-    return phoneNumber;
+	var phoneNumber = originalPhoneNumber;
+	// supprime tous les ' ', '-', '(', ')'
+	phoneNumber = phoneNumber.replace(/ /g, '');
+	phoneNumber = phoneNumber.replace(/-/g, '');
+	phoneNumber = phoneNumber.replace('(', '');
+	phoneNumber = phoneNumber.replace(')', '');
+	return phoneNumber;
 }
 
 // onError: Failed to get the contacts
 function onErrorContactsList(contactError) {
-    alert('onError!');
+	alert('onError!');
 }
 
 /**
@@ -438,24 +443,24 @@ function update_account() {
  * Permet d'afficher les parametres du compte de l'utilisateur
  */
 function showParam() {
-    $.ajax({
-        url: serverUrl + 'api/parameters/',
-        type: 'GET',
-        success: function (code, statut) {
-            $('#content').empty().html(code);
-            // Bouton de deconnexion
-            $("#deconnecter").bind("click", redirectConnect);
-            // Supprimer Compter
-            $("#delete").bind("click", delete_account);
-            // Mettre à jour le compte
-            $("#update").bind("submit", update_account);
-            bindButton();
-        },
-        error: function (code, statut) {
-            console.log(code);
+	$.ajax({
+		url: serverUrl + 'api/parameters/',
+		type: 'GET',
+		success: function (code, statut) {
+			$('#content').empty().html(code);
+			// Bouton de deconnexion
+			$("#deconnecter").bind("click", redirectConnect);
+			// Supprimer Compter
+			$("#delete").bind("click", delete_account);
+			// Mettre à jour le compte
+			$("#update").bind("submit", update_account);
+			bindButton();
+		},
+		error: function (code, statut) {
+			console.log(code);
 
-        }
-    });
+		}
+	});
 
 }
 
@@ -463,17 +468,17 @@ function showParam() {
  * Affiche le menu
  */
 function showIndex() {
-    $.ajax({
-        url: serverUrl + 'api/menu/',
-        type: 'GET',
-        success: function (code, statut) {
-            $('#content').empty().html(code);
-            bindButton();
-        },
-        error: function (code, statut) {
-            console.log(code);
-        }
-    });
+	$.ajax({
+		url: serverUrl + 'api/menu/',
+		type: 'GET',
+		success: function (code, statut) {
+			$('#content').empty().html(code);
+			bindButton();
+		},
+		error: function (code, statut) {
+			console.log(code);
+		}
+	});
 }
 
 /**
@@ -503,27 +508,27 @@ function showProfil() {
  * @param {type} telephone
  */
 function getPosition(telephone) {
-    var longitude;
-    var latitude;
-    $.when(
-    $.ajax({
-        url: serverUrl + 'api/user/pos/' + telephone,
-        type: 'GET',
-        success: function (code, statut) {
-            // return latitude et longitude
+	var longitude;
+	var latitude;
+	$.when(
+			$.ajax({
+				url: serverUrl + 'api/user/pos/' + telephone,
+				type: 'GET',
+				success: function (code, statut) {
+					// return latitude et longitude
 
-            longitude = code.longitude;
-            latitude = code.latitude;
-            console.log(code);
+					longitude = code.longitude;
+					latitude = code.latitude;
+					console.log(code);
 //            getDistance(longitudeGlob, latitudeGlob, code.longitude, code.latitude);
-        },
-        error: function (code, statut) {
-            console.log(code);
-        }
-    })
-    ).then(
-        getDistance(longitudeGlob, latitudeGlob, longitude, latitude)
-    )
+				},
+				error: function (code, statut) {
+					console.log(code);
+				}
+			})
+			).then(
+			getDistance(longitudeGlob, latitudeGlob, longitude, latitude)
+			)
 }
 
 /**
@@ -532,61 +537,61 @@ function getPosition(telephone) {
  * @param {type} latitude de l'utilisatuer
  */
 function getDistance(longitude, latitude, longitudeContact, latitudeContact) {
-    console.log("RENTRE");
-    $.ajax({
-        url: serverUrl + 'api/user/pos/',
-        type: 'GET',
-        data: {
-            "longitude": longitude,
-            "latitude": latitude,
-            "longitudeContact": longitudeContact,
-            "latitudeContact": latitudeContact
-        },
-        success: function (code, statut) {
-            // la distance entre 2 utilisateurs
-            console.log(code.dist);
-            DISTANCE = code.dist;
-        },
-        error: function (code, statut) {
-            console.log(code);
-        }
-    });
+	console.log("RENTRE");
+	$.ajax({
+		url: serverUrl + 'api/user/pos/',
+		type: 'GET',
+		data: {
+			"longitude": longitude,
+			"latitude": latitude,
+			"longitudeContact": longitudeContact,
+			"latitudeContact": latitudeContact
+		},
+		success: function (code, statut) {
+			// la distance entre 2 utilisateurs
+			console.log(code.dist);
+			DISTANCE = code.dist;
+		},
+		error: function (code, statut) {
+			console.log(code);
+		}
+	});
 }
 
 // Avoir les boutons du menu fonctionnel (A appeler)
 function bindButton() {
-    $("#param").bind("click", showParam);
-    $("#accueil").bind("click", showMenu);
-    $("#profil").bind("click", showProfil);
+	$("#param").bind("click", showParam);
+	$("#accueil").bind("click", showMenu);
+	$("#profil").bind("click", showProfil);
 
 }
 
 var app = {
-    // Application Constructor
-    initialize: function () {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
-    onDeviceReady: function () {
-        console.log("console.log works well");
-        // action_add (id pour s'inscrire avec le formulaire) (soumission)
-        $("#action_add").bind("submit", inscription);
-        // Redirection vers la page d'inscription
-        $("#redirec_register").bind("click", redirecRegister);
-        $("#redirec_reg").bind("click", redirecRegister);
-        //Bouton connexion
-        $("#connect").bind("submit", connection);
-        // Rediriger vers la page de connexion
-        $("#connect_page").bind("click", redirectConnect);
-        $("#redirect_con").bind("click", redirectConnect);
-        // Retourner a la page de connexion apres creation de compte
-        $("#redirect_regis").bind("click", redirectConnect);
+	// Application Constructor
+	initialize: function () {
+		document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+	},
+	onDeviceReady: function () {
+		console.log("console.log works well");
+		// action_add (id pour s'inscrire avec le formulaire) (soumission)
+		$("#action_add").bind("submit", inscription);
+		// Redirection vers la page d'inscription
+		$("#redirec_register").bind("click", redirecRegister);
+		$("#redirec_reg").bind("click", redirecRegister);
+		//Bouton connexion
+		$("#connect").bind("submit", connection);
+		// Rediriger vers la page de connexion
+		$("#connect_page").bind("click", redirectConnect);
+		$("#redirect_con").bind("click", redirectConnect);
+		// Retourner a la page de connexion apres creation de compte
+		$("#redirect_regis").bind("click", redirectConnect);
 //        getPreviousMessages();
 //        enableChat();
-        // Retourner la page des paramètres
-        //$("#param").bind("click", showParam);
-        // Boutton de deconnexion
-        $("#deconnect").bind("click", redirectConnect);
-    }
+		// Retourner la page des paramètres
+		//$("#param").bind("click", showParam);
+		// Boutton de deconnexion
+		$("#deconnect").bind("click", redirectConnect);
+	}
 
 };
 app.initialize();
